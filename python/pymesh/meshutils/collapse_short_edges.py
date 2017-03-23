@@ -1,9 +1,10 @@
 import logging
 import math
 import numpy as np
+import collections
 
 from .. import timethis
-from ..meshio import form_mesh
+from ..meshio import form_mesh, save_mesh
 
 from PyMeshUtils import ShortEdgeRemoval, IsolatedVertexRemoval, FinFaceRemoval
 
@@ -48,12 +49,36 @@ class _EdgeCollapser(object):
         """
         if not self.input_mesh.has_attribute("vertex_dihedral_angle"):
             self.input_mesh.add_attribute("vertex_dihedral_angle");
-        dihedral_angle = self.input_mesh.get_attribute("vertex_dihedral_angle");
-        self.importance = np.round(dihedral_angle * 4 / math.pi).astype(int);
+        assert(self.input_mesh.has_attribute("edge_dihedral_angle"));
+        v_dihedral_angle = self.input_mesh.get_attribute("vertex_dihedral_angle");
+        self.importance = np.round(v_dihedral_angle * 4 / math.pi).astype(int);
+
+        e_dihedral_angle = self.input_mesh.get_attribute("edge_dihedral_angle");
+        e_dihedral_angle[np.logical_not(np.isfinite(e_dihedral_angle))] = 0;
+        e_dihedral_angle = np.absolute(e_dihedral_angle) > math.pi * 0.25;
+        assert(len(e_dihedral_angle) == self.input_mesh.num_faces *
+                self.input_mesh.vertex_per_face);
+        e_dihedral_angle = e_dihedral_angle.reshape(
+                (self.input_mesh.num_faces, -1), order="C");
+
+        assert(self.input_mesh.vertex_per_face == 3);
+        input_faces = self.input_mesh.faces;
+        dihedral_valance = np.zeros(self.input_mesh.num_vertices, dtype=int);
+        counter = collections.Counter(input_faces[e_dihedral_angle[:,0], 0]);
+        counter.update(collections.Counter(input_faces[e_dihedral_angle[:,0], 1]));
+        counter.update(collections.Counter(input_faces[e_dihedral_angle[:,1], 1]));
+        counter.update(collections.Counter(input_faces[e_dihedral_angle[:,1], 2]));
+        counter.update(collections.Counter(input_faces[e_dihedral_angle[:,2], 2]));
+        counter.update(collections.Counter(input_faces[e_dihedral_angle[:,2], 0]));
+        for i,count in counter.items():
+            dihedral_valance[i] += count;
 
         # keep boundary.
         bd_vertices = self.input_mesh.boundary_vertices;
         self.importance[bd_vertices] = 10;
+
+        # keep intersection of feature curves.
+        self.importance[dihedral_valance > 2] = -1;
 
     @timethis
     def collapse(self, abs_threshold, rel_threshold):
