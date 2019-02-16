@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class VertexDihedralAngleAttribute : public MeshAttribute {
+class VertexDihedralAngleAttribute : public MeshAttributeF {
     public:
-        VertexDihedralAngleAttribute(const std::string& name) : MeshAttribute(name) { }
+        VertexDihedralAngleAttribute(const std::string& name) : MeshAttributeF(name) { }
         virtual ~VertexDihedralAngleAttribute() {}
 
     public:

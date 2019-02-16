@@ -42,7 +42,7 @@ VectorI TetrahedronElements::getElement(size_t ei) const {
 }
 
 Float TetrahedronElements::getElementVolume(size_t ei) const {
-    return m_mesh->get_attribute("voxel_volume")[ei];
+    return m_mesh->get_float_attribute("voxel_volume")[ei];
 }
 
 VectorF TetrahedronElements::getElementCenter(size_t ei) const {
@@ -64,7 +64,7 @@ void TetrahedronElements::check_mesh() {
     if (m_mesh->get_vertex_per_voxel() != 4) {
         throw RuntimeError("Mesh is not a tetrahedron mesh.");
     }
-    if (!m_mesh->has_attribute("voxel_volume")) {
-        m_mesh->add_attribute("voxel_volume");
+    if (!m_mesh->has_float_attribute("voxel_volume")) {
+        m_mesh->add_float_attribute("voxel_volume");
     }
 }

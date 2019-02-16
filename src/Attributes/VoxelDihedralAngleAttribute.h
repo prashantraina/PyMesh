@@ -7,10 +7,10 @@ namespace PyMesh {
 
 class Mesh;
 
-class VoxelDihedralAngleAttribute : public MeshAttribute {
+class VoxelDihedralAngleAttribute : public MeshAttributeF {
     public:
         VoxelDihedralAngleAttribute(const std::string& name)
-            : MeshAttribute(name) {}
+            : MeshAttributeF(name) {}
         virtual ~VoxelDihedralAngleAttribute()=default;
 
     public:

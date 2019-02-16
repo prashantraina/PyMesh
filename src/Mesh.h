@@ -83,13 +83,22 @@ class Mesh {
 
         // Attribute access
         bool has_attribute(const std::string& attr_name) const;
-        void add_attribute(const std::string& attr_name);
-        void add_empty_attribute(const std::string& attr_name);
+        bool has_float_attribute(const std::string& attr_name) const;
+        bool has_int_attribute(const std::string& attr_name) const;
+        void add_float_attribute(const std::string& attr_name);
+        void add_int_attribute(const std::string& attr_name);
+        void add_empty_float_attribute(const std::string& attr_name);
+        void add_empty_int_attribute(const std::string& attr_name);
         void remove_attribute(const std::string& attr_name);
-        VectorF& get_attribute(const std::string& attr_name);
-        const VectorF& get_attribute(const std::string& attr_name) const;
-        void set_attribute(const std::string& attr_name, VectorF& attr_value);
+        VectorF& get_float_attribute(const std::string& attr_name);
+        VectorI& get_int_attribute(const std::string& attr_name);
+        const VectorF& get_float_attribute(const std::string& attr_name) const;
+        const VectorI& get_int_attribute(const std::string& attr_name) const;
+        void set_float_attribute(const std::string &attr_name, VectorF &attr_value);
+        void set_int_attribute(const std::string &attr_name, VectorI &attr_value);
         std::vector<std::string> get_attribute_names() const;
+        std::vector<std::string> get_float_attribute_names() const;
+        std::vector<std::string> get_int_attribute_names() const;
 
     public:
         typedef std::shared_ptr<MeshGeometry>     GeometryPtr;

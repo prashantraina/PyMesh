@@ -78,7 +78,7 @@ size_t OBJParser::num_attributes() const {
     return r;
 }
 
-OBJParser::AttrNames OBJParser::get_attribute_names() const {
+OBJParser::AttrNames OBJParser::get_float_attribute_names() const {
     OBJParser::AttrNames attr_names;
     if (m_corner_normals.size() > 0)
         attr_names.push_back("corner_normal");
@@ -86,6 +86,11 @@ OBJParser::AttrNames OBJParser::get_attribute_names() const {
         attr_names.push_back("corner_texture");
     if (m_parameters.size() > 0)
         attr_names.push_back("vertex_parameter");
+    return attr_names;
+}
+
+OBJParser::AttrNames OBJParser::get_int_attribute_names() const {
+    OBJParser::AttrNames attr_names;
     return attr_names;
 }
 
@@ -140,7 +145,7 @@ void OBJParser::export_voxels(int* buffer) {
     }
 }
 
-void OBJParser::export_attribute(const std::string& name, Float* buffer) {
+void OBJParser::export_float_attribute(const std::string& name, Float* buffer) {
     if (name == "corner_normal")
         export_normals(buffer);
     else if (name == "corner_texture")
@@ -148,9 +153,13 @@ void OBJParser::export_attribute(const std::string& name, Float* buffer) {
     else if (name == "vertex_parameter")
         export_parameters(buffer);
     else {
-        std::cerr << "Warning: mesh does not have attribute with name "
+        std::cerr << "Warning: mesh does not have float attribute with name "
             << name << std::endl;
     }
+}
+
+void OBJParser::export_int_attribute(const std::string& name, int* buffer) {
+    std::cerr << "Warning: mesh does not have int attributes!" << std::endl;
 }
 
 void OBJParser::export_normals(Float* buffer) const {

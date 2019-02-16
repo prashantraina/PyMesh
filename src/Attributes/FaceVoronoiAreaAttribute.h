@@ -8,9 +8,9 @@ namespace PyMesh {
 /**
  * Compute the Voronoi area of each corner of the face.
  */
-class FaceVoronoiAreaAttribute : public MeshAttribute {
+class FaceVoronoiAreaAttribute : public MeshAttributeF {
     public:
-        FaceVoronoiAreaAttribute(const std::string& name) : MeshAttribute(name) {}
+        FaceVoronoiAreaAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~FaceVoronoiAreaAttribute() {}
 
     public:

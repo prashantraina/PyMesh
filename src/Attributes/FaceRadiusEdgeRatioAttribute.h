@@ -7,10 +7,10 @@ namespace PyMesh {
 
 class Mesh;
 
-class FaceRadiusEdgeRatioAttribute : public MeshAttribute {
+class FaceRadiusEdgeRatioAttribute : public MeshAttributeF {
     public:
         FaceRadiusEdgeRatioAttribute(const std::string& name)
-            : MeshAttribute(name) {}
+            : MeshAttributeF(name) {}
         virtual ~FaceRadiusEdgeRatioAttribute()=default;
 
     public:

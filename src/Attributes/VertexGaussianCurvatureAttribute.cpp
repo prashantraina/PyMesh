@@ -10,10 +10,10 @@ using namespace PyMesh;
 
 void VertexGaussianCurvatureAttribute::compute_from_mesh(Mesh& mesh) {
     if (!mesh.has_attribute("vertex_voronoi_area")) {
-        mesh.add_attribute("vertex_voronoi_area");
+        mesh.add_float_attribute("vertex_voronoi_area");
     }
 
-    const auto& area = mesh.get_attribute("vertex_voronoi_area");
+    const auto& area = mesh.get_float_attribute("vertex_voronoi_area");
     const size_t num_vertices = mesh.get_num_vertices();
     const size_t num_faces = mesh.get_num_faces();
     const size_t vertex_per_face = mesh.get_vertex_per_face();

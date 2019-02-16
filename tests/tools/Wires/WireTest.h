@@ -71,7 +71,7 @@ class WireTest : public TestBase {
 
             if (debug.size() > 0) {
                 mesh->add_attribute("debug");
-                mesh->set_attribute("debug", debug);
+                mesh->set_float_attribute("debug", debug);
                 writer->with_attribute("debug");
             }
 

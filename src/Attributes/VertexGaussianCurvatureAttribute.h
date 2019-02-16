@@ -7,9 +7,9 @@
 
 namespace PyMesh {
 
-class VertexGaussianCurvatureAttribute : public MeshAttribute {
+class VertexGaussianCurvatureAttribute : public MeshAttributeF {
     public:
-        VertexGaussianCurvatureAttribute(const std::string& name) : MeshAttribute(name) {}
+        VertexGaussianCurvatureAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VertexGaussianCurvatureAttribute() {}
 
     public:

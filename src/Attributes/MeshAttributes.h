@@ -21,16 +21,27 @@ class MeshAttributes {
     public:
         // Simple API
         virtual bool has_attribute(const std::string& name);
-        virtual void add_empty_attribute(const std::string& name);
-        virtual void add_attribute(const std::string& name, Mesh& mesh);
+        virtual bool has_float_attribute(const std::string& name);
+        virtual bool has_int_attribute(const std::string& name);
+        virtual void add_empty_float_attribute(const std::string& name);
+        virtual void add_empty_int_attribute(const std::string& name);
+        virtual void add_float_attribute(const std::string& name, Mesh& mesh);
+        virtual void add_int_attribute(const std::string& name, Mesh& mesh);
         virtual void remove_attribute(const std::string& name);
-        virtual VectorF& get_attribute(const std::string& name);
+        virtual VectorF& get_float_attribute(const std::string& name);
+        virtual VectorI& get_int_attribute(const std::string& name);
         virtual void set_attribute(const std::string& name, VectorF& value);
+        virtual void set_attribute(const std::string& name, VectorI& value);
         virtual AttributeNames get_attribute_names() const;
+        virtual AttributeNames get_float_attribute_names() const;
+        virtual AttributeNames get_int_attribute_names() const;
 
     protected:
-        typedef std::map<std::string, MeshAttribute::Ptr> AttributeMap;
-        typedef std::pair<std::string, MeshAttribute::Ptr> AttributeMapEntry;
-        AttributeMap m_attributes;
+        typedef std::map<std::string, MeshAttribute<VectorF>::Ptr> AttributeMapF;
+        typedef std::pair<std::string, MeshAttribute<VectorF>::Ptr> AttributeMapEntryF;
+        typedef std::map<std::string, MeshAttribute<VectorI>::Ptr> AttributeMapI;
+        typedef std::pair<std::string, MeshAttribute<VectorI>::Ptr> AttributeMapEntryI;
+        AttributeMapF m_attributesF;
+        AttributeMapI m_attributesI;
 };
 }

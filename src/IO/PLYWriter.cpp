@@ -90,9 +90,12 @@ void PLYWriter::regroup_attribute_names(Mesh& mesh) {
     const size_t num_faces = mesh.get_num_faces();
     const size_t num_voxels = mesh.get_num_voxels();
 
-    m_vertex_attr_names.clear();
-    m_face_attr_names.clear();
-    m_voxel_attr_names.clear();
+    m_vertex_attr_namesF.clear();
+    m_vertex_attr_namesI.clear();
+    m_face_attr_namesF.clear();
+    m_face_attr_namesI.clear();
+    m_voxel_attr_namesF.clear();
+    m_voxel_attr_namesI.clear();
 
     for (NameArray::const_iterator itr = m_attr_names.begin();
             itr != m_attr_names.end(); itr++) {
@@ -104,8 +107,13 @@ void PLYWriter::regroup_attribute_names(Mesh& mesh) {
             throw RuntimeError(err_msg.str());
         }
 
-        const VectorF& attr = mesh.get_attribute(name);
-        const size_t attr_size = attr.size();
+        const bool isInt = mesh.has_int_attribute(name);
+        const size_t attr_size = isInt ? mesh.get_int_attribute(name).size() : mesh.get_float_attribute(name).size();
+
+        NameArray& m_vertex_attr_names = isInt ? m_vertex_attr_namesI : m_vertex_attr_namesF;
+        NameArray& m_face_attr_names = isInt ? m_face_attr_namesI : m_face_attr_namesF;
+        NameArray& m_voxel_attr_names = isInt ? m_voxel_attr_namesI : m_voxel_attr_namesF;
+
         if (name.substr(0, 6) == "vertex" && num_vertices > 0 && attr_size % num_vertices == 0) {
             m_vertex_attr_names.push_back(name);
         } else if (name.substr(0, 4) == "face" && num_faces > 0 && attr_size % num_faces== 0) {
@@ -123,7 +131,7 @@ void PLYWriter::regroup_attribute_names(Mesh& mesh) {
             } else if (num_voxels > 0 && attr_size % num_voxels == 0) {
                 m_voxel_attr_names.push_back(name);
             } else {
-                std::cerr << "Unkown attribute type (" << name << ") ignored."
+                std::cerr << "Unknown attribute type (" << name << ") ignored."
                     << std::endl;
             }
         }
@@ -144,10 +152,10 @@ void PLYWriter::add_vertex_elements_header(Mesh& mesh, p_ply& ply) {
                 "Add Z coordinate failed");
     }
 
-    for (NameArray::const_iterator itr = m_vertex_attr_names.begin();
-            itr != m_vertex_attr_names.end(); itr++) {
+    for (NameArray::const_iterator itr = m_vertex_attr_namesF.begin();
+            itr != m_vertex_attr_namesF.end(); itr++) {
         const std::string name = strip_prefix(*itr, "vertex_");
-        const VectorF attr = mesh.get_attribute(*itr);
+        const VectorF& attr = mesh.get_float_attribute(*itr);
         const size_t per_vertex_size = attr.size() / num_vertices;
         e_ply_type ply_type = m_scalar;
         if (name == "red" || name == "green" || name == "blue") {
@@ -157,8 +165,26 @@ void PLYWriter::add_vertex_elements_header(Mesh& mesh, p_ply& ply) {
             assert_success(ply_add_scalar_property(ply, name.c_str(), ply_type),
                     "Add scalar property failed");
         } else {
-            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UCHAR,
-                        ply_type), "Add list proerty failed");
+            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UINT,
+                        ply_type), "Add list property failed");
+        }
+    }
+
+    for (NameArray::const_iterator itr = m_vertex_attr_namesI.begin();
+         itr != m_vertex_attr_namesI.end(); itr++) {
+        const std::string name = strip_prefix(*itr, "vertex_");
+        const VectorI& attr = mesh.get_int_attribute(*itr);
+        const size_t per_vertex_size = attr.size() / num_vertices;
+        e_ply_type ply_type = PLY_INT;
+        if (name == "red" || name == "green" || name == "blue") {
+            ply_type = PLY_UCHAR;
+        }
+        if (per_vertex_size == 1) {
+            assert_success(ply_add_scalar_property(ply, name.c_str(), ply_type),
+                           "Add scalar property failed");
+        } else {
+            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UINT,
+                                                 ply_type), "Add list property failed");
         }
     }
 }
@@ -169,10 +195,10 @@ void PLYWriter::add_face_elements_header(Mesh& mesh, p_ply& ply) {
     assert_success(ply_add_list_property(ply, "vertex_indices", PLY_UCHAR,
                 PLY_INT), "Add face vertex indices failed");
 
-    for (NameArray::const_iterator itr = m_face_attr_names.begin();
-            itr != m_face_attr_names.end(); itr++) {
+    for (NameArray::const_iterator itr = m_face_attr_namesF.begin();
+            itr != m_face_attr_namesF.end(); itr++) {
         std::string name = strip_prefix(*itr, "face_");
-        const VectorF& attr = mesh.get_attribute(*itr);
+        const VectorF& attr = mesh.get_float_attribute(*itr);
         const size_t per_face_size = attr.size() / num_faces;
         e_ply_type ply_type = m_scalar;
         if (name == "red" || name == "green" || name == "blue") {
@@ -185,8 +211,29 @@ void PLYWriter::add_face_elements_header(Mesh& mesh, p_ply& ply) {
             if (name == "corner_texture") {
                 name = "texcoord";
             }
-            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UCHAR,
+            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UINT,
                         ply_type), "Add per face vector attribute failed");
+        }
+    }
+
+    for (NameArray::const_iterator itr = m_face_attr_namesI.begin();
+         itr != m_face_attr_namesI.end(); itr++) {
+        std::string name = strip_prefix(*itr, "face_");
+        const VectorI& attr = mesh.get_int_attribute(*itr);
+        const size_t per_face_size = attr.size() / num_faces;
+        e_ply_type ply_type = PLY_INT;
+        if (name == "red" || name == "green" || name == "blue") {
+            ply_type = PLY_UCHAR;
+        }
+        if (per_face_size == 1) {
+            assert_success(ply_add_scalar_property(ply, name.c_str(), ply_type),
+                           "Add per face scalar attribute failed");
+        } else {
+            if (name == "corner_texture") {
+                name = "texcoord";
+            }
+            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UINT,
+                                                 ply_type), "Add per face vector attribute failed");
         }
     }
 }
@@ -198,10 +245,10 @@ void PLYWriter::add_voxel_elements_header(Mesh& mesh, p_ply& ply) {
     assert_success(ply_add_list_property(ply, "vertex_indices", PLY_UCHAR,
                 PLY_INT), "Add voxel vertex indices failed");
 
-    for (NameArray::const_iterator itr = m_voxel_attr_names.begin();
-            itr != m_voxel_attr_names.end(); itr++) {
+    for (NameArray::const_iterator itr = m_voxel_attr_namesF.begin();
+            itr != m_voxel_attr_namesF.end(); itr++) {
         const std::string name = strip_prefix(*itr, "voxel_");
-        const VectorF& attr = mesh.get_attribute(*itr);
+        const VectorF& attr = mesh.get_float_attribute(*itr);
         const size_t per_voxel_size = attr.size() / num_voxels;
         e_ply_type ply_type = m_scalar;
         if (name == "red" || name == "green" || name == "blue") {
@@ -211,8 +258,26 @@ void PLYWriter::add_voxel_elements_header(Mesh& mesh, p_ply& ply) {
             assert_success(ply_add_scalar_property(ply, name.c_str(), ply_type),
                     "Add per voxel scalar attribute failed");
         } else {
-            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UCHAR,
+            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UINT,
                         ply_type), "Add per voxel vector attribute failed");
+        }
+    }
+
+    for (NameArray::const_iterator itr = m_voxel_attr_namesI.begin();
+         itr != m_voxel_attr_namesI.end(); itr++) {
+        const std::string name = strip_prefix(*itr, "voxel_");
+        const VectorI& attr = mesh.get_int_attribute(*itr);
+        const size_t per_voxel_size = attr.size() / num_voxels;
+        e_ply_type ply_type = PLY_INT;
+        if (name == "red" || name == "green" || name == "blue") {
+            ply_type = PLY_UCHAR;
+        }
+        if (per_voxel_size == 1) {
+            assert_success(ply_add_scalar_property(ply, name.c_str(), ply_type),
+                           "Add per voxel scalar attribute failed");
+        } else {
+            assert_success(ply_add_list_property(ply, name.c_str(), PLY_UINT,
+                                                 ply_type), "Add per voxel vector attribute failed");
         }
     }
 }
@@ -222,29 +287,48 @@ void PLYWriter::write_vertex_elements(Mesh& mesh, p_ply& ply) {
     const size_t num_vertices = mesh.get_num_vertices();
     const VectorF& vertices = mesh.get_vertices();
 
-    std::vector<const VectorF*> attributes;
-    std::vector<size_t> per_vertex_sizes;
-    for (NameArray::const_iterator itr = m_vertex_attr_names.begin();
-            itr != m_vertex_attr_names.end(); itr++) {
+    std::vector<const VectorF*> attributesF;
+    std::vector<const VectorI*> attributesI;
+    std::vector<size_t> per_vertex_sizesF;
+    std::vector<size_t> per_vertex_sizesI;
+    for (NameArray::const_iterator itr = m_vertex_attr_namesF.begin();
+            itr != m_vertex_attr_namesF.end(); itr++) {
         const std::string& name = *itr;
-        const VectorF& attr = mesh.get_attribute(name);
-        attributes.push_back(&attr);
-        per_vertex_sizes.push_back(attr.size() / num_vertices);
+        const VectorF& attr = mesh.get_float_attribute(name);
+        attributesF.push_back(&attr);
+        per_vertex_sizesF.push_back(attr.size() / num_vertices);
+    }
+    for (NameArray::const_iterator itr = m_vertex_attr_namesI.begin();
+         itr != m_vertex_attr_namesI.end(); itr++) {
+        const std::string& name = *itr;
+        const VectorI& attr = mesh.get_int_attribute(name);
+        attributesI.push_back(&attr);
+        per_vertex_sizesI.push_back(attr.size() / num_vertices);
     }
 
-    const size_t num_attributes = attributes.size();
+    const size_t num_attributesF = attributesF.size();
+    const size_t num_attributesI = attributesI.size();
 
     for (size_t i=0; i<num_vertices; i++) {
         for (size_t j=0; j<dim; j++) {
             ply_write(ply, vertices[i*dim + j]);
         }
-        for (size_t j=0; j<num_attributes; j++) {
-            const size_t per_vertex_size = per_vertex_sizes[j];
+        for (size_t j=0; j<num_attributesF; j++) {
+            const size_t per_vertex_size = per_vertex_sizesF[j];
             if (per_vertex_size != 1) {
                 ply_write(ply, per_vertex_size);
             }
             for (size_t k=0; k<per_vertex_size; k++) {
-                ply_write(ply, attributes[j]->coeff(i*per_vertex_size + k));
+                ply_write(ply, attributesF[j]->coeff(i*per_vertex_size + k));
+            }
+        }
+        for (size_t j=0; j<num_attributesI; j++) {
+            const size_t per_vertex_size = per_vertex_sizesI[j];
+            if (per_vertex_size != 1) {
+                ply_write(ply, per_vertex_size);
+            }
+            for (size_t k=0; k<per_vertex_size; k++) {
+                ply_write(ply, attributesI[j]->coeff(i*per_vertex_size + k));
             }
         }
     }
@@ -255,29 +339,49 @@ void PLYWriter::write_face_elements(Mesh& mesh, p_ply& ply) {
     const size_t num_vertex_per_face = mesh.get_vertex_per_face();
     const VectorI& faces = mesh.get_faces();
 
-    std::vector<const VectorF*> attributes;
-    std::vector<size_t> per_face_sizes;
-    for (NameArray::const_iterator itr = m_face_attr_names.begin();
-            itr != m_face_attr_names.end(); itr++) {
+    std::vector<const VectorF*> attributesF;
+    std::vector<const VectorI*> attributesI;
+    std::vector<size_t> per_face_sizesF;
+    std::vector<size_t> per_face_sizesI;
+    for (NameArray::const_iterator itr = m_face_attr_namesF.begin();
+            itr != m_face_attr_namesF.end(); itr++) {
         const std::string& name = *itr;
-        const VectorF& attr = mesh.get_attribute(name);
-        attributes.push_back(&attr);
-        per_face_sizes.push_back(attr.size() / num_faces);
+        const VectorF& attr = mesh.get_float_attribute(name);
+        attributesF.push_back(&attr);
+        per_face_sizesF.push_back(attr.size() / num_faces);
+    }
+    for (NameArray::const_iterator itr = m_face_attr_namesI.begin();
+         itr != m_face_attr_namesI.end(); itr++) {
+        const std::string& name = *itr;
+        const VectorI& attr = mesh.get_int_attribute(name);
+        attributesI.push_back(&attr);
+        per_face_sizesI.push_back(attr.size() / num_faces);
     }
 
-    const size_t num_attributes = attributes.size();
+    const size_t num_attributesF = attributesF.size();
+    const size_t num_attributesI = attributesI.size();
+
     for (size_t i=0; i<num_faces; i++) {
         ply_write(ply, num_vertex_per_face);
         for (size_t j=0; j<num_vertex_per_face; j++) {
             ply_write(ply, faces[i*num_vertex_per_face + j]);
         }
-        for (size_t j=0; j<num_attributes; j++) {
-            const size_t per_face_size = per_face_sizes[j];
+        for (size_t j=0; j<num_attributesF; j++) {
+            const size_t per_face_size = per_face_sizesF[j];
             if (per_face_size != 1) {
                 ply_write(ply, per_face_size);
             }
             for (size_t k=0; k<per_face_size; k++) {
-                ply_write(ply, attributes[j]->coeff(i*per_face_size + k));
+                ply_write(ply, attributesF[j]->coeff(i*per_face_size + k));
+            }
+        }
+        for (size_t j=0; j<num_attributesI; j++) {
+            const size_t per_face_size = per_face_sizesI[j];
+            if (per_face_size != 1) {
+                ply_write(ply, per_face_size);
+            }
+            for (size_t k=0; k<per_face_size; k++) {
+                ply_write(ply, attributesI[j]->coeff(i*per_face_size + k));
             }
         }
     }
@@ -289,30 +393,51 @@ void PLYWriter::write_voxel_elements(Mesh& mesh, p_ply& ply) {
     const size_t num_vertex_per_voxel = mesh.get_vertex_per_voxel();
     const VectorI& voxels = mesh.get_voxels();
 
-    std::vector<const VectorF*> attributes;
-    std::vector<size_t> per_voxel_sizes;
-    for (NameArray::const_iterator itr = m_voxel_attr_names.begin();
-            itr != m_voxel_attr_names.end(); itr++) {
+    std::vector<const VectorF*> attributesF;
+    std::vector<const VectorI*> attributesI;
+    std::vector<size_t> per_voxel_sizesF;
+    std::vector<size_t> per_voxel_sizesI;
+    for (NameArray::const_iterator itr = m_voxel_attr_namesF.begin();
+            itr != m_voxel_attr_namesF.end(); itr++) {
         const std::string& name = *itr;
-        const VectorF& attr = mesh.get_attribute(name);
-        attributes.push_back(&attr);
+        const VectorF& attr = mesh.get_float_attribute(name);
+        attributesF.push_back(&attr);
         assert(attr.size() % num_voxels == 0);
-        per_voxel_sizes.push_back(attr.size() / num_voxels);
+        per_voxel_sizesF.push_back(attr.size() / num_voxels);
+    }
+    for (NameArray::const_iterator itr = m_voxel_attr_namesI.begin();
+         itr != m_voxel_attr_namesI.end(); itr++) {
+        const std::string& name = *itr;
+        const VectorI& attr = mesh.get_int_attribute(name);
+        attributesI.push_back(&attr);
+        assert(attr.size() % num_voxels == 0);
+        per_voxel_sizesI.push_back(attr.size() / num_voxels);
     }
 
-    const size_t num_attributes = attributes.size();
+    const size_t num_attributesF = attributesF.size();
+    const size_t num_attributesI = attributesI.size();
+
     for (size_t i=0; i<num_voxels; i++) {
         ply_write(ply, num_vertex_per_voxel);
         for (size_t j=0; j<num_vertex_per_voxel; j++) {
             ply_write(ply, voxels[i*num_vertex_per_voxel + j]);
         }
-        for (size_t j=0; j<num_attributes; j++) {
-            const size_t per_voxel_size = per_voxel_sizes[j];
+        for (size_t j=0; j<num_attributesF; j++) {
+            const size_t per_voxel_size = per_voxel_sizesF[j];
             if (per_voxel_size != 1) {
                 ply_write(ply, per_voxel_size);
             }
             for (size_t k=0; k<per_voxel_size; k++) {
-                ply_write(ply, attributes[j]->coeff(i*per_voxel_size + k));
+                ply_write(ply, attributesF[j]->coeff(i*per_voxel_size + k));
+            }
+        }
+        for (size_t j=0; j<num_attributesI; j++) {
+            const size_t per_voxel_size = per_voxel_sizesI[j];
+            if (per_voxel_size != 1) {
+                ply_write(ply, per_voxel_size);
+            }
+            for (size_t k=0; k<per_voxel_size; k++) {
+                ply_write(ply, attributesI[j]->coeff(i*per_voxel_size + k));
             }
         }
     }

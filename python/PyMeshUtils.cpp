@@ -31,17 +31,29 @@ using namespace pybind11::literals;
 
 void init_MeshUtils(py::module& m) {
     m.def("convert_to_vertex_attribute",
-            &AttributeUtils::convert_to_vertex_attribute);
+          py::overload_cast<Mesh&, const VectorF&>(&AttributeUtils::convert_to_vertex_attribute));
+    m.def("convert_to_vertex_attribute",
+          py::overload_cast<Mesh&, const VectorI&>(&AttributeUtils::convert_to_vertex_attribute));
     m.def("convert_to_vertex_attribute_from_name",
-            &AttributeUtils::convert_to_vertex_attribute_from_name);
+            &AttributeUtils::convert_to_vertex_float_attribute_from_name);
+    m.def("convert_to_vertex_int_attribute_from_name",
+          &AttributeUtils::convert_to_vertex_int_attribute_from_name);
     m.def("convert_to_face_attribute",
-            &AttributeUtils::convert_to_face_attribute);
+          py::overload_cast<Mesh&, const VectorF&>(&AttributeUtils::convert_to_face_attribute));
+    m.def("convert_to_face_attribute",
+          py::overload_cast<Mesh&, const VectorI&>(&AttributeUtils::convert_to_face_attribute));
     m.def("convert_to_face_attribute_from_name",
-            &AttributeUtils::convert_to_face_attribute_from_name);
+            &AttributeUtils::convert_to_face_float_attribute_from_name);
+    m.def("convert_to_face_attribute_from_name",
+          &AttributeUtils::convert_to_face_int_attribute_from_name);
     m.def("convert_to_voxel_attribute",
-            &AttributeUtils::convert_to_voxel_attribute);
+          py::overload_cast<Mesh&, const VectorF&>(&AttributeUtils::convert_to_voxel_attribute));
+    m.def("convert_to_voxel_attribute",
+          py::overload_cast<Mesh&, const VectorI&>(&AttributeUtils::convert_to_voxel_attribute));
     m.def("convert_to_voxel_attribute_from_name",
-            &AttributeUtils::convert_to_voxel_attribute_from_name);
+            &AttributeUtils::convert_to_voxel_float_attribute_from_name);
+    m.def("convert_to_voxel_attribute_from_name",
+          &AttributeUtils::convert_to_voxel_int_attribute_from_name);
     m.def("extract_exterior_faces",
             &MeshUtils::extract_exterior_faces);
     m.def("is_colinear_2D", &FaceUtils::is_colinear_2D);

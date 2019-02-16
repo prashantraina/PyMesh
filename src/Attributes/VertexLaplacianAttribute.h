@@ -7,9 +7,9 @@
 
 namespace PyMesh {
 
-class VertexLaplacianAttribute : public MeshAttribute {
+class VertexLaplacianAttribute : public MeshAttributeF {
     public:
-        VertexLaplacianAttribute(const std::string& name) : MeshAttribute(name) {}
+        VertexLaplacianAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VertexLaplacianAttribute() {}
 
     public:

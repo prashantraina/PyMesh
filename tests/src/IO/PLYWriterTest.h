@@ -93,9 +93,9 @@ TEST_F(PLYWriterTest, VoxelAttributes) {
 
     mesh->add_attribute("voxel_index");
     mesh->add_attribute("voxel_vector");
-    mesh->set_attribute("voxel_vector", vector_field);
+    mesh->set_float_attribute("voxel_vector", vector_field);
     mesh->add_attribute("voxel_tensor");
-    mesh->set_attribute("voxel_tensor", tensor_field);
+    mesh->set_float_attribute("voxel_tensor", tensor_field);
 
     std::string tmp_name = "tmp_cube_voxel_attr.ply";
     PLYWriter writer;
@@ -116,9 +116,9 @@ TEST_F(PLYWriterTest, DuplicatedAttributes) {
     VectorF vertex_field = VectorF::Zero(mesh->get_num_vertices());
     VectorF face_field = VectorF::Zero(mesh->get_num_faces());
     mesh->add_attribute("vertex_red");
-    mesh->set_attribute("vertex_red", vertex_field);
+    mesh->set_float_attribute("vertex_red", vertex_field);
     mesh->add_attribute("face_red");
-    mesh->set_attribute("face_red", face_field);
+    mesh->set_float_attribute("face_red", face_field);
 
     std::string tmp_name = "tmp_cube_voxel_attr.ply";
     PLYWriter writer;

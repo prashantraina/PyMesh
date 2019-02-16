@@ -17,13 +17,13 @@ void FaceCircumRadiusAttribute::compute_from_mesh(Mesh& mesh) {
     }
 
     if (!mesh.has_attribute("edge_length")) {
-        mesh.add_attribute("edge_length");
+        mesh.add_float_attribute("edge_length");
     }
     if (!mesh.has_attribute("face_area")) {
-        mesh.add_attribute("face_area");
+        mesh.add_float_attribute("face_area");
     }
-    VectorF edge_length = mesh.get_attribute("edge_length");
-    VectorF face_area = mesh.get_attribute("face_area");
+    VectorF edge_length = mesh.get_float_attribute("edge_length");
+    VectorF face_area = mesh.get_float_attribute("face_area");
 
     VectorF& circumradii = m_values;
     circumradii.resize(num_faces);

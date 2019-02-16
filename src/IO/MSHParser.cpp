@@ -50,12 +50,16 @@ size_t MSHParser::num_attributes() const {
     return node_names.size() + elem_names.size();
 }
 
-MSHParser::AttrNames MSHParser::get_attribute_names() const {
+MSHParser::AttrNames MSHParser::get_float_attribute_names() const {
     MSHParser::AttrNames attr_names;
     MshLoader::FieldNames node_names = m_loader->get_node_field_names();
     MshLoader::FieldNames elem_names = m_loader->get_element_field_names();
     attr_names.insert(attr_names.end(), node_names.begin(), node_names.end());
     attr_names.insert(attr_names.end(), elem_names.begin(), elem_names.end());
+    return attr_names;
+}
+MSHParser::AttrNames MSHParser::get_int_attribute_names() const {
+    MSHParser::AttrNames attr_names;
     return attr_names;
 }
 
@@ -79,9 +83,14 @@ void MSHParser::export_voxels(int* buffer) {
     std::copy(voxels.data(), voxels.data() + voxels.size(), buffer);
 }
 
-void MSHParser::export_attribute(const std::string& name, Float* buffer) {
+void MSHParser::export_float_attribute(const std::string& name, Float* buffer) {
     const VectorF& attribute = get_attribute(name);
     std::copy(attribute.data(), attribute.data() + attribute.size(), buffer);
+}
+void MSHParser::export_int_attribute(const std::string& name, int* buffer) {
+    std::ostringstream strOut;
+    strOut << "Int attribute does not exist: " << name << std::endl;
+    throw IOError(strOut.str());
 }
 
 size_t MSHParser::vertex_per_voxel() const {

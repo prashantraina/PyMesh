@@ -11,9 +11,9 @@ void VertexDihedralAngleAttribute::compute_from_mesh(Mesh& mesh) {
     const size_t vertex_per_face = mesh.get_vertex_per_face();
 
     if (!mesh.has_attribute("edge_dihedral_angle")) {
-        mesh.add_attribute("edge_dihedral_angle");
+        mesh.add_float_attribute("edge_dihedral_angle");
     }
-    auto& edge_dihedral_angles = mesh.get_attribute("edge_dihedral_angle");
+    auto& edge_dihedral_angles = mesh.get_float_attribute("edge_dihedral_angle");
 
     auto& vertex_dihedral_angles = m_values;
     vertex_dihedral_angles = VectorF::Zero(num_vertices);

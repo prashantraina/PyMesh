@@ -63,11 +63,11 @@ void ElementWiseOrthotropicMaterial::update() {
 
 void ElementWiseOrthotropicMaterial::update_2D() {
     const size_t num_faces = m_material_mesh->get_num_faces();
-    const VectorF& young_x = m_material_mesh->get_attribute(m_young_field_names[0]);
-    const VectorF& young_y = m_material_mesh->get_attribute(m_young_field_names[1]);
-    const VectorF& poisson_xy = m_material_mesh->get_attribute(m_poisson_field_names[0]);
-    const VectorF& poisson_yx = m_material_mesh->get_attribute(m_poisson_field_names[1]);
-    const VectorF& shear = m_material_mesh->get_attribute(m_shear_field_names[0]);
+    const VectorF& young_x = m_material_mesh->get_float_attribute(m_young_field_names[0]);
+    const VectorF& young_y = m_material_mesh->get_float_attribute(m_young_field_names[1]);
+    const VectorF& poisson_xy = m_material_mesh->get_float_attribute(m_poisson_field_names[0]);
+    const VectorF& poisson_yx = m_material_mesh->get_float_attribute(m_poisson_field_names[1]);
+    const VectorF& shear = m_material_mesh->get_float_attribute(m_shear_field_names[0]);
 
     assert(young_x.size() == num_faces);
     assert(young_y.size() == num_faces);
@@ -89,18 +89,18 @@ void ElementWiseOrthotropicMaterial::update_2D() {
 
 void ElementWiseOrthotropicMaterial::update_3D() {
     const size_t num_voxels = m_material_mesh->get_num_voxels();
-    const VectorF& young_x = m_material_mesh->get_attribute(m_young_field_names[0]);
-    const VectorF& young_y = m_material_mesh->get_attribute(m_young_field_names[1]);
-    const VectorF& young_z = m_material_mesh->get_attribute(m_young_field_names[2]);
-    const VectorF& poisson_yz = m_material_mesh->get_attribute(m_poisson_field_names[0]);
-    const VectorF& poisson_zy = m_material_mesh->get_attribute(m_poisson_field_names[1]);
-    const VectorF& poisson_zx = m_material_mesh->get_attribute(m_poisson_field_names[2]);
-    const VectorF& poisson_xz = m_material_mesh->get_attribute(m_poisson_field_names[3]);
-    const VectorF& poisson_xy = m_material_mesh->get_attribute(m_poisson_field_names[4]);
-    const VectorF& poisson_yx = m_material_mesh->get_attribute(m_poisson_field_names[5]);
-    const VectorF& shear_yz = m_material_mesh->get_attribute(m_shear_field_names[0]);
-    const VectorF& shear_zx = m_material_mesh->get_attribute(m_shear_field_names[1]);
-    const VectorF& shear_xy = m_material_mesh->get_attribute(m_shear_field_names[2]);
+    const VectorF& young_x = m_material_mesh->get_float_attribute(m_young_field_names[0]);
+    const VectorF& young_y = m_material_mesh->get_float_attribute(m_young_field_names[1]);
+    const VectorF& young_z = m_material_mesh->get_float_attribute(m_young_field_names[2]);
+    const VectorF& poisson_yz = m_material_mesh->get_float_attribute(m_poisson_field_names[0]);
+    const VectorF& poisson_zy = m_material_mesh->get_float_attribute(m_poisson_field_names[1]);
+    const VectorF& poisson_zx = m_material_mesh->get_float_attribute(m_poisson_field_names[2]);
+    const VectorF& poisson_xz = m_material_mesh->get_float_attribute(m_poisson_field_names[3]);
+    const VectorF& poisson_xy = m_material_mesh->get_float_attribute(m_poisson_field_names[4]);
+    const VectorF& poisson_yx = m_material_mesh->get_float_attribute(m_poisson_field_names[5]);
+    const VectorF& shear_yz = m_material_mesh->get_float_attribute(m_shear_field_names[0]);
+    const VectorF& shear_zx = m_material_mesh->get_float_attribute(m_shear_field_names[1]);
+    const VectorF& shear_xy = m_material_mesh->get_float_attribute(m_shear_field_names[2]);
 
     assert(young_x.size() == num_voxels);
     assert(young_y.size() == num_voxels);

@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class FaceAspectRatioAttribute : public MeshAttribute {
+class FaceAspectRatioAttribute : public MeshAttributeF {
     public:
-        FaceAspectRatioAttribute(const std::string& name) : MeshAttribute(name) {}
+        FaceAspectRatioAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~FaceAspectRatioAttribute() {}
 
     public:

@@ -7,9 +7,9 @@
 
 namespace PyMesh {
 
-class VertexNormalAttribute : public MeshAttribute {
+class VertexNormalAttribute : public MeshAttributeF {
     public:
-        VertexNormalAttribute(const std::string& name) : MeshAttribute(name) {}
+        VertexNormalAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VertexNormalAttribute() {}
 
     public:

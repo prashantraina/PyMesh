@@ -39,7 +39,7 @@ void ElementWiseSymmetricMaterial::update() {
 void ElementWiseSymmetricMaterial::update_2D() {
     const size_t num_entries_per_matrix = 9;
     const size_t num_faces = m_material_mesh->get_num_faces();
-    const VectorF& matrix_field = m_material_mesh->get_attribute(m_matrix_field_name);
+    const VectorF& matrix_field = m_material_mesh->get_float_attribute(m_matrix_field_name);
     if (matrix_field.size() != num_faces * num_entries_per_matrix) {
         std::stringstream err_msg;
         err_msg << "Symmetric material matrix field (" << m_matrix_field_name
@@ -60,7 +60,7 @@ void ElementWiseSymmetricMaterial::update_2D() {
 void ElementWiseSymmetricMaterial::update_3D() {
     const size_t num_entries_per_matrix = 36;
     const size_t num_voxels = m_material_mesh->get_num_voxels();
-    const VectorF& matrix_field = m_material_mesh->get_attribute(m_matrix_field_name);
+    const VectorF& matrix_field = m_material_mesh->get_float_attribute(m_matrix_field_name);
     if (matrix_field.size() != num_voxels * num_entries_per_matrix) {
         std::stringstream err_msg;
         err_msg << "Symmetric material matrix field (" << m_matrix_field_name

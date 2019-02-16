@@ -23,7 +23,7 @@ TEST_F(ElementWiseSymmetricMaterialTest, 2D) {
     }
     mesh->add_attribute("face_centroid");
     mesh->add_attribute("symm_matrix");
-    mesh->set_attribute("symm_matrix", matrix_field);
+    mesh->set_float_attribute("symm_matrix", matrix_field);
 
     MaterialPtr mat = MaterialPtr(new ElementWiseSymmetricMaterial(
                 m_density, mesh, "symm_matrix"));
@@ -50,7 +50,7 @@ TEST_F(ElementWiseSymmetricMaterialTest, 3D) {
     }
     mesh->add_attribute("voxel_centroid");
     mesh->add_attribute("symm_matrix");
-    mesh->set_attribute("symm_matrix", matrix_field);
+    mesh->set_float_attribute("symm_matrix", matrix_field);
 
     MaterialPtr mat = MaterialPtr(new ElementWiseSymmetricMaterial(
                 m_density, mesh, "symm_matrix"));

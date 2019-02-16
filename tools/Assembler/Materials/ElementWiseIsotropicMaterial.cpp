@@ -45,8 +45,8 @@ void ElementWiseIsotropicMaterial::update() {
 
 void ElementWiseIsotropicMaterial::update_2D() {
     const size_t num_faces = m_material_mesh->get_num_faces();
-    const VectorF& young = m_material_mesh->get_attribute(m_young_field_name);
-    const VectorF& poisson = m_material_mesh->get_attribute(m_poisson_field_name);
+    const VectorF& young = m_material_mesh->get_float_attribute(m_young_field_name);
+    const VectorF& poisson = m_material_mesh->get_float_attribute(m_poisson_field_name);
     assert(young.size() == num_faces);
     assert(poisson.size() == num_faces);
 
@@ -59,8 +59,8 @@ void ElementWiseIsotropicMaterial::update_2D() {
 
 void ElementWiseIsotropicMaterial::update_3D() {
     const size_t num_voxels = m_material_mesh->get_num_voxels();
-    const VectorF& young = m_material_mesh->get_attribute(m_young_field_name);
-    const VectorF& poisson = m_material_mesh->get_attribute(m_poisson_field_name);
+    const VectorF& young = m_material_mesh->get_float_attribute(m_young_field_name);
+    const VectorF& poisson = m_material_mesh->get_float_attribute(m_poisson_field_name);
     assert(young.size() == num_voxels);
     assert(poisson.size() == num_voxels);
 

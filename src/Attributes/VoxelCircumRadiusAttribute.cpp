@@ -20,9 +20,9 @@ void VoxelCircumRadiusAttribute::compute_from_mesh(Mesh& mesh) {
     }
 
     if (!mesh.has_attribute("voxel_circumcenter")) {
-        mesh.add_attribute("voxel_circumcenter");
+        mesh.add_float_attribute("voxel_circumcenter");
     }
-    const auto& circumcenter = mesh.get_attribute("voxel_circumcenter");
+    const auto& circumcenter = mesh.get_float_attribute("voxel_circumcenter");
 
     VectorF& circumradius = m_values;
     circumradius.resize(num_voxels);

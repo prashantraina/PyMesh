@@ -44,15 +44,15 @@ TEST_F(ElementWiseOrthotropicMaterialTest, 2D) {
 
     mesh->add_attribute("face_centroid");
     mesh->add_attribute("young_x");
-    mesh->set_attribute("young_x", young_x);
+    mesh->set_float_attribute("young_x", young_x);
     mesh->add_attribute("young_y");
-    mesh->set_attribute("young_y", young_y);
+    mesh->set_float_attribute("young_y", young_y);
     mesh->add_attribute("poisson_xy");
-    mesh->set_attribute("poisson_xy", poisson_xy);
+    mesh->set_float_attribute("poisson_xy", poisson_xy);
     mesh->add_attribute("poisson_yx");
-    mesh->set_attribute("poisson_yx", poisson_yx);
+    mesh->set_float_attribute("poisson_yx", poisson_yx);
     mesh->add_attribute("shear");
-    mesh->set_attribute("shear", shear);
+    mesh->set_float_attribute("shear", shear);
 
     std::vector<std::string> young_fields;
     std::vector<std::string> poisson_fields;
@@ -115,29 +115,29 @@ TEST_F(ElementWiseOrthotropicMaterialTest, 3D) {
 
     mesh->add_attribute("voxel_centroid");
     mesh->add_attribute("young_x");
-    mesh->set_attribute("young_x", young_x);
+    mesh->set_float_attribute("young_x", young_x);
     mesh->add_attribute("young_y");
-    mesh->set_attribute("young_y", young_y);
+    mesh->set_float_attribute("young_y", young_y);
     mesh->add_attribute("young_z");
-    mesh->set_attribute("young_z", young_z);
+    mesh->set_float_attribute("young_z", young_z);
     mesh->add_attribute("poisson_yz");
-    mesh->set_attribute("poisson_yz", poisson_yz);
+    mesh->set_float_attribute("poisson_yz", poisson_yz);
     mesh->add_attribute("poisson_zy");
-    mesh->set_attribute("poisson_zy", poisson_zy);
+    mesh->set_float_attribute("poisson_zy", poisson_zy);
     mesh->add_attribute("poisson_zx");
-    mesh->set_attribute("poisson_zx", poisson_zx);
+    mesh->set_float_attribute("poisson_zx", poisson_zx);
     mesh->add_attribute("poisson_xz");
-    mesh->set_attribute("poisson_xz", poisson_xz);
+    mesh->set_float_attribute("poisson_xz", poisson_xz);
     mesh->add_attribute("poisson_xy");
-    mesh->set_attribute("poisson_xy", poisson_xy);
+    mesh->set_float_attribute("poisson_xy", poisson_xy);
     mesh->add_attribute("poisson_yx");
-    mesh->set_attribute("poisson_yx", poisson_yx);
+    mesh->set_float_attribute("poisson_yx", poisson_yx);
     mesh->add_attribute("shear_yz");
-    mesh->set_attribute("shear_yz", shear_yz);
+    mesh->set_float_attribute("shear_yz", shear_yz);
     mesh->add_attribute("shear_zx");
-    mesh->set_attribute("shear_zx", shear_zx);
+    mesh->set_float_attribute("shear_zx", shear_zx);
     mesh->add_attribute("shear_xy");
-    mesh->set_attribute("shear_xy", shear_xy);
+    mesh->set_float_attribute("shear_xy", shear_xy);
 
     std::vector<std::string> young_fields;
     std::vector<std::string> poisson_fields;

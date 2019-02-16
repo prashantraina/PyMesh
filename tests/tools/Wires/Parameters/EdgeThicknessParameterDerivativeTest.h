@@ -32,7 +32,7 @@ TEST_F(EdgeThicknessParameterDerivativeTest, cube) {
     VectorF flattened_derivative = flatten(
             manager->compute_shape_velocity(mesh).front());
     mesh->add_attribute("derivative");
-    mesh->set_attribute("derivative", flattened_derivative);
+    mesh->set_float_attribute("derivative", flattened_derivative);
 
     save_mesh("edge_thickness_derivative_cube.msh", mesh, "derivative");
 

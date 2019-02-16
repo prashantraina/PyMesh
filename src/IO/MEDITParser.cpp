@@ -102,7 +102,11 @@ size_t MEDITParser::num_voxels() const {
     else return m_voxels.size() / m_vertex_per_voxel;
 }
 
-MEDITParser::AttrNames MEDITParser::get_attribute_names() const {
+MEDITParser::AttrNames MEDITParser::get_float_attribute_names() const {
+    MEDITParser::AttrNames attr_names;
+    return attr_names;
+}
+MEDITParser::AttrNames MEDITParser::get_int_attribute_names() const {
     MEDITParser::AttrNames attr_names;
     return attr_names;
 }
@@ -119,9 +123,13 @@ void MEDITParser::export_voxels(int* buffer) {
     std::copy(m_voxels.begin(), m_voxels.end(), buffer);
 }
 
-void MEDITParser::export_attribute(const std::string& name, Float* buffer) {
+void MEDITParser::export_float_attribute(const std::string& name, Float* buffer) {
     std::cerr << "Warning: attribute "  << name << " does not exist." <<
         std::endl;
+}
+void MEDITParser::export_int_attribute(const std::string& name, int* buffer) {
+    std::cerr << "Warning: attribute "  << name << " does not exist." <<
+              std::endl;
 }
 
 bool MEDITParser::parse_header(std::ifstream& fin) {

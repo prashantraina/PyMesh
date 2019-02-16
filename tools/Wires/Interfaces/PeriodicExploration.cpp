@@ -175,7 +175,7 @@ void PeriodicExploration::update_mesh() {
             vertex_per_face);
     VectorI flattened_voxels = Eigen::Map<VectorI>(m_voxels.data(), num_voxels *
             vertex_per_voxel);
-    VectorF face_sources = m_face_sources.cast<Float>();
+    VectorI& face_sources = m_face_sources;
 
     MeshFactory factory;
     factory.load_data(
@@ -183,8 +183,8 @@ void PeriodicExploration::update_mesh() {
             dim, vertex_per_face, vertex_per_voxel);
     m_mesh = factory.create();
 
-    m_mesh->add_attribute("face_source");
-    m_mesh->set_attribute("face_source", face_sources);
+    m_mesh->add_int_attribute("face_source");
+    m_mesh->set_int_attribute("face_source", face_sources);
 }
 
 void PeriodicExploration::save_mesh(const std::string& filename) const {

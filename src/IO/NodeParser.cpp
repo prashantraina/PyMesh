@@ -34,7 +34,7 @@ NodeParser::NodeParser() :
     m_dim(3),
     m_vertex_per_face(3),
     m_vertex_per_voxel(4),
-    m_num_node_attributes(0) {}
+    m_num_node_attributesF(0) {}
 
 bool NodeParser::parse(const std::string& filename) {
     const std::string& node_file = filename;
@@ -71,7 +71,7 @@ bool NodeParser::parse_nodes(const std::string& filename) {
     next_line(fin, line, LINE_SIZE);
     size_t n = sscanf(line,
             "%zd %zd %zd %zd", &m_num_vertices, &m_dim,
-            &m_num_node_attributes, &boundary_marker);
+            &m_num_node_attributesF, &boundary_marker);
     assert(n == 4);
     assert(boundary_marker == 0 || boundary_marker == 1);
 
@@ -87,12 +87,12 @@ bool NodeParser::parse_nodes(const std::string& filename) {
         }
         m_vertices.push_back(std::move(v));
 
-        if (m_num_node_attributes> 0) {
-            VectorF attr(m_num_node_attributes);
-            for (size_t j=0; j<m_num_node_attributes; j++) {
+        if (m_num_node_attributesF > 0) {
+            VectorF attr(m_num_node_attributesF);
+            for (size_t j=0; j<m_num_node_attributesF; j++) {
                 ss >> attr[j];
             }
-            m_node_attributes.push_back(std::move(attr));
+            m_node_attributesF.push_back(std::move(attr));
         }
 
         if (boundary_marker == 1) {
@@ -179,19 +179,24 @@ bool NodeParser::parse_elements(const std::string& filename) {
 }
 
 size_t NodeParser::num_attributes() const {
-    return m_num_node_attributes +
+    return m_num_node_attributesF +
         (m_region_attributes.empty() ? 0:1) +
         (m_boundary_node_markers.empty() ? 0:1) +
         (m_boundary_face_markers.empty() ? 0:1);
 }
 
-NodeParser::AttrNames NodeParser::get_attribute_names() const {
+NodeParser::AttrNames NodeParser::get_float_attribute_names() const {
     AttrNames names;
-    for (size_t i=0; i<m_num_node_attributes; i++) {
+    for (size_t i=0; i<m_num_node_attributesF; i++) {
         std::stringstream name;
         name << "node_attribute_" << i;
         names.push_back(name.str());
     }
+    return names;
+}
+
+NodeParser::AttrNames NodeParser::get_int_attribute_names() const {
+    AttrNames names;
     if (!m_boundary_node_markers.empty()) {
         names.push_back("node_boundary_marker");
     }
@@ -252,14 +257,14 @@ void NodeParser::export_voxels(int* buffer) {
     }
 }
 
-void NodeParser::export_attribute(const std::string& name, Float* buffer) {
+void NodeParser::export_float_attribute(const std::string& name, Float* buffer) {
     if (IOUtils::is_prefix("node_attribute_", name.c_str())) {
         int index = -1;
         sscanf(name.c_str(), "node_attribute_%d", &index);
-        assert(index >=0 && index < m_num_node_attributes);
-        assert(m_node_attributes.size() == m_num_vertices);
+        assert(index >=0 && index < m_num_node_attributesF);
+        assert(m_node_attributesF.size() == m_num_vertices);
         size_t count = 0;
-        for (const auto& attr : m_node_attributes) {
+        for (const auto& attr : m_node_attributesF) {
             buffer[count] = attr[index];
             count++;
         }
@@ -274,7 +279,25 @@ void NodeParser::export_attribute(const std::string& name, Float* buffer) {
                 m_region_attributes.end(), buffer);
     } else {
         std::stringstream err_msg;
-        err_msg << "Unknown attribute: " << name;
+        err_msg << "Unknown float attribute: " << name;
+        throw RuntimeError(err_msg.str());
+    }
+}
+
+
+void NodeParser::export_int_attribute(const std::string& name, int* buffer) {
+    if (name == "node_boundary_marker") {
+        std::copy(m_boundary_node_markers.begin(),
+                  m_boundary_node_markers.end(), buffer);
+    } else if (name == "face_boundary_marker") {
+        std::copy(m_boundary_face_markers.begin(),
+                  m_boundary_face_markers.end(), buffer);
+    } else if (name == "region") {
+        std::copy(m_region_attributes.begin(),
+                  m_region_attributes.end(), buffer);
+    } else {
+        std::stringstream err_msg;
+        err_msg << "Unknown int attribute: " << name;
         throw RuntimeError(err_msg.str());
     }
 }

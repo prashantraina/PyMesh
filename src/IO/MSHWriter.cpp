@@ -110,15 +110,23 @@ void MSHWriter::write_surface_mesh(Mesh& mesh) {
             get_face_type(vertex_per_face));
 
     for (AttrNames::const_iterator itr = m_attr_names.begin();
-            itr != m_attr_names.end(); itr++) {
+         itr != m_attr_names.end(); itr++) {
         if (!mesh.has_attribute(*itr)) {
             std::cerr << "Error: Attribute \"" << *itr<< "\" does not exist."
-                << std::endl;
+                      << std::endl;
             continue;
         }
 
-        VectorF& attr = mesh.get_attribute(*itr);
-        write_attribute(saver, *itr, attr, dim, num_vertices, num_faces);
+        if (!mesh.has_float_attribute(*itr)) {
+            std::cerr << "Warning: converting attribute '" << (*itr) << "' to float!"
+                      << std::endl;
+            const VectorI& attr = mesh.get_int_attribute(*itr);
+            VectorF attrF = attr.cast<Float>();
+            write_attribute(saver, *itr, attrF, dim, num_vertices, num_faces);
+        } else {
+            VectorF &attr = mesh.get_float_attribute(*itr);
+            write_attribute(saver, *itr, attr, dim, num_vertices, num_faces);
+        }
     }
 }
 
@@ -134,15 +142,23 @@ void MSHWriter::write_volume_mesh(Mesh& mesh) {
             get_voxel_type(vertex_per_voxel));
 
     for (AttrNames::const_iterator itr = m_attr_names.begin();
-            itr != m_attr_names.end(); itr++) {
+         itr != m_attr_names.end(); itr++) {
         if (!mesh.has_attribute(*itr)) {
             std::cerr << "Error: Attribute \"" << *itr<< "\" does not exist."
-                << std::endl;
+                      << std::endl;
             continue;
         }
 
-        VectorF& attr = mesh.get_attribute(*itr);
-        write_attribute(saver, *itr, attr, dim, num_vertices, num_voxels);
+        if (!mesh.has_float_attribute(*itr)) {
+            std::cerr << "Warning: converting attribute '" << (*itr) << "' to float!"
+                      << std::endl;
+            const VectorI& attr = mesh.get_int_attribute(*itr);
+            VectorF attrF = attr.cast<Float>();
+            write_attribute(saver, *itr, attrF, dim, num_vertices, num_voxels);
+        } else {
+            VectorF &attr = mesh.get_float_attribute(*itr);
+            write_attribute(saver, *itr, attr, dim, num_vertices, num_voxels);
+        }
     }
 }
 

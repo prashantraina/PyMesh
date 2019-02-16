@@ -27,19 +27,25 @@ class PLYParser : public MeshParser {
         virtual size_t num_voxels() const;
         virtual size_t num_attributes() const;
 
-        virtual AttrNames get_attribute_names() const;
+        virtual AttrNames get_float_attribute_names() const;
+        virtual AttrNames get_int_attribute_names() const;
         virtual size_t get_attribute_size(const std::string& name) const;
 
         virtual void export_vertices(Float* buffer);
         virtual void export_faces(int* buffer);
         virtual void export_voxels(int* buffer);
-        virtual void export_attribute(const std::string& name, Float* buffer);
+        virtual void export_float_attribute(const std::string& name, Float* buffer);
+        virtual void export_int_attribute(const std::string& name, int* buffer);
 
     public:
-        void add_property(const std::string& elem_name,
+        void add_float_property(const std::string& elem_name,
                 const std::string& prop_name, size_t size);
+        void add_int_property(const std::string& elem_name,
+                                const std::string& prop_name, size_t size);
         void add_property_value(const std::string& elem_name,
                 const std::string& prop_name, Float value);
+        void add_property_value(const std::string& elem_name,
+                            const std::string& prop_name, int value);
 
         void init_vertices();
         void init_faces();
@@ -49,12 +55,14 @@ class PLYParser : public MeshParser {
         typedef VectorF VertexArray;
         typedef VectorI FaceArray;
         typedef VectorI VoxelArray;
-        typedef std::map<std::string, std::vector<Float> > AttributeMap;
+        typedef std::map<std::string, std::vector<Float> > AttributeMapF;
+        typedef std::map<std::string, std::vector<int> > AttributeMapI;
 
         VertexArray   m_vertices;
         FaceArray     m_faces;
         VoxelArray    m_voxels;
-        AttributeMap m_attributes;
+        AttributeMapF m_attributesF;
+        AttributeMapI m_attributesI;
         size_t       m_dim;
         size_t       m_vertex_per_face;
         size_t       m_vertex_per_voxel;

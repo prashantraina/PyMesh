@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class VoxelInradiusAttribute : public MeshAttribute {
+class VoxelInradiusAttribute : public MeshAttributeF {
     public:
-        VoxelInradiusAttribute(const std::string& name) : MeshAttribute(name) {}
+        VoxelInradiusAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VoxelInradiusAttribute() = default;
 
     public:

@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class VoxelCircumCenterAttribute : public MeshAttribute {
+class VoxelCircumCenterAttribute : public MeshAttributeF {
     public:
-        VoxelCircumCenterAttribute(const std::string& name) : MeshAttribute(name) {}
+        VoxelCircumCenterAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VoxelCircumCenterAttribute() = default;
 
     public:

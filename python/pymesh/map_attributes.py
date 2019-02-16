@@ -44,8 +44,11 @@ def map_vertex_attribute(mesh1, mesh2, attr_name, bvh=None):
 
     target_val = (val_0 * a12 + val_1 * a20 + val_2 * a01) / a;
 
+    if values.dtype == np.int32:
+        target_val = target_val.round().astype(np.int32)
+
     if not mesh2.has_attribute(attr_name):
-        mesh2.add_attribute(attr_name);
+        mesh2.add_attribute(attr_name, dtype=target_val.dtype);
     mesh2.set_attribute(attr_name, target_val);
 
 
@@ -76,7 +79,7 @@ def map_face_attribute(mesh1, mesh2, attr_name, bvh=None):
     target_val = values[closest_faces, :];
 
     if not mesh2.has_attribute(attr_name):
-        mesh2.add_attribute(attr_name);
+        mesh2.add_attribute(attr_name, dtype=target_val.dtype);
     mesh2.set_attribute(attr_name, target_val);
 
 def map_corner_attribute(mesh1, mesh2, attr_name, bvh=None):
@@ -142,7 +145,10 @@ def map_corner_attribute(mesh1, mesh2, attr_name, bvh=None):
             values[f_closest_faces, 2, :] * p2_a01) / a;
     target_val = np.stack([val_p0, val_p1, val_p2], axis=1);
 
+    if values.dtype == np.int32:
+        target_val = target_val.round().astype(np.int32)
+
     if not mesh2.has_attribute(attr_name):
-        mesh2.add_attribute(attr_name);
+        mesh2.add_attribute(attr_name, dtype=target_val.dtype);
     mesh2.set_attribute(attr_name, target_val);
 

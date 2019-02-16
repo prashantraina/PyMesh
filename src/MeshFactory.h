@@ -25,7 +25,8 @@ class MeshFactory {
                 const VectorF& vertices, const VectorI& faces, const VectorI& voxels,
                 size_t dim, size_t num_vertex_per_face, size_t num_vertex_per_voxel);
         MeshFactory& with_connectivity(const std::string& conn_type);
-        MeshFactory& with_attribute(const std::string& attr_name);
+        MeshFactory& with_float_attribute(const std::string& attr_name);
+        MeshFactory& with_int_attribute(const std::string& attr_name);
         MeshFactory& drop_zero_dim();
         Mesh::Ptr create() { return m_mesh; }
 

@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class VertexVolumeAttribute : public MeshAttribute {
+class VertexVolumeAttribute : public MeshAttributeF {
     public:
-        VertexVolumeAttribute(const std::string& name) : MeshAttribute(name) {}
+        VertexVolumeAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VertexVolumeAttribute() {}
 
     public:

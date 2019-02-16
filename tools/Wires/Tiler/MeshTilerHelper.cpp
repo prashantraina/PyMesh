@@ -61,12 +61,12 @@ std::vector<ParameterCommon::Variables> MeshTilerHelper::extract_face_attributes
         Mesh::Ptr mesh) {
     const size_t num_faces = mesh->get_num_faces();
     std::vector<ParameterCommon::Variables> vars_array;
-    const auto& attr_names = mesh->get_attribute_names();
+    const auto& attr_names = mesh->get_float_attribute_names();
 
     for (size_t i=0; i<num_faces; i++) {
         ParameterCommon::Variables vars;
         for (const auto& name : attr_names) {
-            const MatrixFr& attr = mesh->get_attribute(name);
+            const MatrixFr& attr = mesh->get_float_attribute(name);
             if (attr.rows() != num_faces) continue;
             if (attr.cols() != 1) continue;
             vars[name] = attr(i, 0);
@@ -80,12 +80,12 @@ std::vector<ParameterCommon::Variables> MeshTilerHelper::extract_voxel_attribute
         Mesh::Ptr mesh) {
     const size_t num_voxels = mesh->get_num_voxels();
     std::vector<ParameterCommon::Variables> vars_array;
-    const auto& attr_names = mesh->get_attribute_names();
+    const auto& attr_names = mesh->get_float_attribute_names();
 
     for (size_t i=0; i<num_voxels; i++) {
         ParameterCommon::Variables vars;
         for (const auto& name : attr_names) {
-            const MatrixFr& attr = mesh->get_attribute(name);
+            const MatrixFr& attr = mesh->get_float_attribute(name);
             if (attr.rows() != num_voxels) continue;
             if (attr.cols() != 1) continue;
             vars[name] = attr(i, 0);

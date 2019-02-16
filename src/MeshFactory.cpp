@@ -96,10 +96,17 @@ MeshFactory& MeshFactory::with_connectivity(
     return *this;
 }
 
-MeshFactory& MeshFactory::with_attribute(
+MeshFactory& MeshFactory::with_float_attribute(
         const std::string& attr_name) {
     Mesh::AttributesPtr attributes = m_mesh->get_attributes();
-    attributes->add_attribute(attr_name, *m_mesh);
+    attributes->add_float_attribute(attr_name, *m_mesh);
+    return *this;
+}
+
+MeshFactory& MeshFactory::with_int_attribute(
+        const std::string& attr_name) {
+    Mesh::AttributesPtr attributes = m_mesh->get_attributes();
+    attributes->add_int_attribute(attr_name, *m_mesh);
     return *this;
 }
 
@@ -141,15 +148,26 @@ void MeshFactory::initialize_voxels(MeshParser::Ptr parser) {
 void MeshFactory::initialize_attributes(MeshParser::Ptr parser) {
     Mesh::AttributesPtr attributes = m_mesh->get_attributes();
 
-    MeshParser::AttrNames attr_names = parser->get_attribute_names();
-    for (MeshParser::AttrNames::const_iterator itr = attr_names.begin();
-            itr != attr_names.end(); itr++) {
+    MeshParser::AttrNames float_attr_names = parser->get_float_attribute_names();
+    for (MeshParser::AttrNames::const_iterator itr = float_attr_names.begin();
+            itr != float_attr_names.end(); itr++) {
         const std::string& name = *itr;
         size_t attr_size = parser->get_attribute_size(name);
         VectorF attr_data(attr_size);
-        parser->export_attribute(name, attr_data.data());
+        parser->export_float_attribute(name, attr_data.data());
 
-        attributes->add_empty_attribute(name);
+        attributes->add_empty_float_attribute(name);
+        attributes->set_attribute(name, attr_data);
+    }
+    MeshParser::AttrNames int_attr_names = parser->get_int_attribute_names();
+    for (MeshParser::AttrNames::const_iterator itr = int_attr_names.begin();
+         itr != int_attr_names.end(); itr++) {
+        const std::string& name = *itr;
+        size_t attr_size = parser->get_attribute_size(name);
+        VectorI attr_data(attr_size);
+        parser->export_int_attribute(name, attr_data.data());
+
+        attributes->add_empty_int_attribute(name);
         attributes->set_attribute(name, attr_data);
     }
 }
@@ -162,9 +180,9 @@ void MeshFactory::compute_and_drop_zero_dim() {
     const char axis[3] = {'X', 'Y', 'Z'};
     std::cerr << "Dropping " << axis[zero_dim]
         << " coordinate because flat geometry." << std::endl;
-    std::vector<std::string> attr_names = m_mesh->get_attribute_names();
-    for (auto itr = attr_names.begin(); itr != attr_names.end(); itr++) {
-        VectorF& attr = m_mesh->get_attribute(*itr);
+    std::vector<std::string> float_attr_names = m_mesh->get_float_attribute_names();
+    for (auto itr = float_attr_names.begin(); itr != float_attr_names.end(); itr++) {
+        VectorF& attr = m_mesh->get_float_attribute(*itr);
         if (attr.size() == num_vertices * 3) {
             VectorF reduced_attr(num_vertices * 2);
             for (size_t i=0; i<num_vertices; i++) {
@@ -173,7 +191,21 @@ void MeshFactory::compute_and_drop_zero_dim() {
                 reduced_attr[i*2+1] = (zero_dim == 2) ?
                     attr[i*3+1] : attr[i*3+2];
             }
-            m_mesh->set_attribute(*itr, reduced_attr);
+            m_mesh->set_float_attribute(*itr, reduced_attr);
+        }
+    }
+    std::vector<std::string> attr_names = m_mesh->get_int_attribute_names();
+    for (auto itr = attr_names.begin(); itr != attr_names.end(); itr++) {
+        VectorI& attr = m_mesh->get_int_attribute(*itr);
+        if (attr.size() == num_vertices * 3) {
+            VectorI reduced_attr(num_vertices * 2);
+            for (size_t i=0; i<num_vertices; i++) {
+                reduced_attr[i*2  ] = (zero_dim == 0) ?
+                                      attr[i*3+1] : attr[i*3];
+                reduced_attr[i*2+1] = (zero_dim == 2) ?
+                                      attr[i*3+1] : attr[i*3+2];
+            }
+            m_mesh->set_int_attribute(*itr, reduced_attr);
         }
     }
 }

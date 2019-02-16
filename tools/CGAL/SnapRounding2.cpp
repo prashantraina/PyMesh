@@ -1,6 +1,7 @@
 /* This file is part of PyMesh. Copyright (c) 2018 by Qingnan Zhou */
 #include "SnapRounding2.h"
 
+
 #include <list>
 #include <vector>
 

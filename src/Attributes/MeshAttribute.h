@@ -13,9 +13,10 @@ class Mesh;
  * associated with each of the mesh internal structure.  For example, vertex
  * normal, face area, voxel volumes, etc.
  */
+ template <typename TVector>
 class MeshAttribute {
     public:
-        typedef std::shared_ptr<MeshAttribute> Ptr;
+        typedef std::shared_ptr<MeshAttribute<TVector>> Ptr;
 
     public:
         MeshAttribute(const std::string& name) : m_name(name) {}
@@ -24,11 +25,14 @@ class MeshAttribute {
     public:
         virtual void compute_from_mesh(Mesh& mesh) {}
         virtual const std::string& get_name() const { return m_name; }
-        virtual VectorF& get_values() { return m_values; }
-        virtual void set_values(VectorF& values) { m_values = values; }
+        virtual TVector& get_values() { return m_values; }
+        virtual void set_values(TVector& values) { m_values = values; }
 
     protected:
         std::string m_name;
-        VectorF m_values;
+        TVector m_values;
 };
+
+typedef MeshAttribute<VectorF> MeshAttributeF;
+typedef MeshAttribute<VectorI> MeshAttributeI;
 }

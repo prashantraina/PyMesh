@@ -141,33 +141,60 @@ VectorI Mesh::get_voxel_adjacent_voxels(size_t Vi) const {
 bool Mesh::has_attribute(const std::string& attr_name) const {
     return m_attributes->has_attribute(attr_name);
 }
-
-void Mesh::add_attribute(const std::string& attr_name) {
-    m_attributes->add_attribute(attr_name, *this);
+bool Mesh::has_float_attribute(const std::string& attr_name) const {
+    return m_attributes->has_float_attribute(attr_name);
+}
+bool Mesh::has_int_attribute(const std::string& attr_name) const {
+    return m_attributes->has_int_attribute(attr_name);
 }
 
-void Mesh::add_empty_attribute(const std::string& attr_name) {
-    m_attributes->add_empty_attribute(attr_name);
+void Mesh::add_float_attribute(const std::string& attr_name) {
+    m_attributes->add_float_attribute(attr_name, *this);
+}
+void Mesh::add_int_attribute(const std::string& attr_name) {
+    m_attributes->add_int_attribute(attr_name, *this);
+}
+
+void Mesh::add_empty_float_attribute(const std::string& attr_name) {
+    m_attributes->add_empty_float_attribute(attr_name);
+}
+void Mesh::add_empty_int_attribute(const std::string& attr_name) {
+    m_attributes->add_empty_int_attribute(attr_name);
 }
 
 void Mesh::remove_attribute(const std::string& attr_name) {
     m_attributes->remove_attribute(attr_name);
 }
 
-VectorF& Mesh::get_attribute(const std::string& attr_name) {
-    return m_attributes->get_attribute(attr_name);
+VectorF& Mesh::get_float_attribute(const std::string& attr_name) {
+    return m_attributes->get_float_attribute(attr_name);
+}
+VectorI& Mesh::get_int_attribute(const std::string& attr_name) {
+    return m_attributes->get_int_attribute(attr_name);
 }
 
-const VectorF& Mesh::get_attribute(const std::string& attr_name) const {
-    return m_attributes->get_attribute(attr_name);
+const VectorF& Mesh::get_float_attribute(const std::string& attr_name) const {
+    return m_attributes->get_float_attribute(attr_name);
+}
+const VectorI& Mesh::get_int_attribute(const std::string& attr_name) const {
+    return m_attributes->get_int_attribute(attr_name);
 }
 
-void Mesh::set_attribute(const std::string& attr_name, VectorF& attr_value) {
+void Mesh::set_float_attribute(const std::string &attr_name, VectorF &attr_value) {
+    return m_attributes->set_attribute(attr_name, attr_value);
+}
+void Mesh::set_int_attribute(const std::string &attr_name, VectorI &attr_value) {
     return m_attributes->set_attribute(attr_name, attr_value);
 }
 
 std::vector<std::string> Mesh::get_attribute_names() const {
     return m_attributes->get_attribute_names();
+}
+std::vector<std::string> Mesh::get_float_attribute_names() const {
+    return m_attributes->get_float_attribute_names();
+}
+std::vector<std::string> Mesh::get_int_attribute_names() const {
+    return m_attributes->get_int_attribute_names();
 }
 
 void Mesh::set_geometry(GeometryPtr geometry) {

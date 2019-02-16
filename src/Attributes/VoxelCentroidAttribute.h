@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class VoxelCentroidAttribute : public MeshAttribute {
+class VoxelCentroidAttribute : public MeshAttributeF {
     public:
-        VoxelCentroidAttribute(const std::string& name) : MeshAttribute(name) {}
+        VoxelCentroidAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VoxelCentroidAttribute() {}
 
     public:

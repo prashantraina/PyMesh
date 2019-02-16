@@ -5,9 +5,9 @@
 
 namespace PyMesh {
 
-class VoxelIncenterAttribute : public MeshAttribute {
+class VoxelIncenterAttribute : public MeshAttributeF {
     public:
-        VoxelIncenterAttribute(const std::string& name) : MeshAttribute(name) {}
+        VoxelIncenterAttribute(const std::string& name) : MeshAttributeF(name) {}
         virtual ~VoxelIncenterAttribute() = default;
 
     public:

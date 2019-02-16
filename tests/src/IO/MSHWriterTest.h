@@ -150,9 +150,9 @@ TEST_F(MSHWriterTest, VoxelAttributes) {
 
     mesh->add_attribute("voxel_index");
     mesh->add_attribute("voxel_vector");
-    mesh->set_attribute("voxel_vector", vector_field);
+    mesh->set_float_attribute("voxel_vector", vector_field);
     mesh->add_attribute("voxel_tensor");
-    mesh->set_attribute("voxel_tensor", tensor_field);
+    mesh->set_float_attribute("voxel_tensor", tensor_field);
 
     std::string tmp_name = "tmp_cube_voxel_attr.msh";
     MSHWriter writer;

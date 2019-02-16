@@ -108,7 +108,7 @@ TEST_F(MeshCutterTest, uv) {
            1.0, 0.0,
            1.0, 1.0;
     mesh->add_attribute("corner_texture");
-    mesh->set_attribute("corner_texture", uvs);
+    mesh->set_float_attribute("corner_texture", uvs);
 
     MeshCutter cutter(mesh);
     MeshPtr cutted_mesh = cutter.cut_at_uv_discontinuity();
@@ -117,14 +117,14 @@ TEST_F(MeshCutterTest, uv) {
 
     // Split uv at vertex 1.
     uvs.segment<2>(2) << 0.9, 0.0;
-    mesh->set_attribute("corner_texture", uvs);
+    mesh->set_float_attribute("corner_texture", uvs);
     cutted_mesh = cutter.cut_at_uv_discontinuity();
     ASSERT_EQ(5, cutted_mesh->get_num_vertices());
     ASSERT_EQ(2, cutted_mesh->get_num_faces());
 
     // Split uv at vertex 2 as well.
     uvs.segment<2>(4) << -0.1, 0.9;
-    mesh->set_attribute("corner_texture", uvs);
+    mesh->set_float_attribute("corner_texture", uvs);
     cutted_mesh = cutter.cut_at_uv_discontinuity();
     ASSERT_EQ(6, cutted_mesh->get_num_vertices());
     ASSERT_EQ(2, cutted_mesh->get_num_faces());
@@ -187,7 +187,7 @@ TEST_F(MeshCutterTest, hex_s1) {
     }
 
     mesh->add_attribute("corner_texture");
-    mesh->set_attribute("corner_texture", uv);
+    mesh->set_float_attribute("corner_texture", uv);
 
     MeshCutter cutter(mesh);
     MeshPtr cutted_mesh = cutter.cut_at_uv_discontinuity();

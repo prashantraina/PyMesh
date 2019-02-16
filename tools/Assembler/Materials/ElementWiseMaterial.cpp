@@ -50,10 +50,10 @@ VectorI ElementWiseMaterial::look_up_voxels(const VectorF& coords) const {
 }
 
 Float ElementWiseMaterial::compute_cell_size() {
-    if (!m_material_mesh->has_attribute("edge_length")) {
-        m_material_mesh->add_attribute("edge_length");
+    if (!m_material_mesh->has_float_attribute("edge_length")) {
+        m_material_mesh->add_float_attribute("edge_length");
     }
-    const VectorF& edge_lengths = m_material_mesh->get_attribute("edge_length");
+    const VectorF& edge_lengths = m_material_mesh->get_float_attribute("edge_length");
     return 0.1 * edge_lengths.sum() / edge_lengths.size();
 }
 
@@ -64,10 +64,10 @@ void ElementWiseMaterial::initialize_2D_grid() {
 
     m_grid = HashGrid::create(cell_size, 2);
 
-    if (!m_material_mesh->has_attribute("face_centroid")) {
-        m_material_mesh->add_attribute("face_centroid");
+    if (!m_material_mesh->has_float_attribute("face_centroid")) {
+        m_material_mesh->add_float_attribute("face_centroid");
     }
-    const VectorF& keys = m_material_mesh->get_attribute("face_centroid");
+    const VectorF& keys = m_material_mesh->get_float_attribute("face_centroid");
 
     for (size_t i=0; i<num_elem; i++) {
         m_grid->insert(i, keys.segment(i*dim, dim));
@@ -81,10 +81,10 @@ void ElementWiseMaterial::initialize_3D_grid() {
 
     m_grid = HashGrid::create(cell_size, 3);
 
-    if (!m_material_mesh->has_attribute("voxel_centroid")) {
-        m_material_mesh->add_attribute("voxel_centroid");
+    if (!m_material_mesh->has_float_attribute("voxel_centroid")) {
+        m_material_mesh->add_float_attribute("voxel_centroid");
     }
-    const VectorF& keys = m_material_mesh->get_attribute("voxel_centroid");
+    const VectorF& keys = m_material_mesh->get_float_attribute("voxel_centroid");
 
     for (size_t i=0; i<num_elem; i++) {
         m_grid->insert(i, keys.segment(i*dim, dim));
