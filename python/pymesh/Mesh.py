@@ -77,6 +77,16 @@ class Mesh(object):
         """
         return self.__mesh.has_attribute(name);
 
+    def has_float_attribute(self, name):
+        """ Check if a float-valued attribute exists.
+        """
+        return self.__mesh.has_float_attribute(name);
+
+    def has_int_attribute(self, name):
+        """ Check if an integer-valued attribute exists.
+        """
+        return self.__mesh.has_int_attribute(name);
+
     def get_attribute(self, name):
         """ Return attribute values in a flattened array.
         """
@@ -128,13 +138,13 @@ class Mesh(object):
         """
 
         if val.dtype == np.float64:
-            self.__mesh.set_attribute(name, val.ravel(order="C"))
+            self.__mesh.set_float_attribute(name, val.ravel(order="C"))
         elif val.dtype == np.float32:
-            self.__mesh.set_attribute(name, val.astype(np.float64).ravel(order="C"))
+            self.__mesh.set_float_attribute(name, val.astype(np.float64).ravel(order="C"))
         elif val.dtype == np.int32:
-            self.__mesh.set_attribute(name, val.ravel(order="C"))
-        elif val.dtype in (np.int64, np.int16, np.uint16, np.uint32, np.int8, np.uint8):
-            self.__mesh.set_attribute(name, val.astype(np.int32).ravel(order="C"))
+            self.__mesh.set_int_attribute(name, val.ravel(order="C"))
+        elif val.dtype in (np.int64, np.int16, np.uint16, np.uint32, np.int8, np.uint8, np.bool):
+            self.__mesh.set_int_attribute(name, val.astype(np.int32).ravel(order="C"))
         else:
             raise ValueError('Unsupported dtype: ' + str(val.dtype))
 

@@ -62,9 +62,9 @@ def separate_mesh(mesh, connectivity_type="auto"):
             comp_mesh = form_mesh(vertices, np.zeros((0, 3)), comp);
         else:
             comp_mesh = form_mesh(vertices, comp);
-        comp_mesh.add_attribute("ori_vertex_index");
+        comp_mesh.add_attribute("ori_vertex_index", dtype=np.int32);
         comp_mesh.set_attribute("ori_vertex_index", info["ori_vertex_index"]);
-        comp_mesh.add_attribute("ori_elem_index");
+        comp_mesh.add_attribute("ori_elem_index", dtype=np.int32);
         comp_mesh.set_attribute("ori_elem_index", elem_sources);
 
         for name in mesh.attribute_names:
