@@ -31,3 +31,8 @@ class CurvatureTest(TestCase):
         self.assertAlmostEqual(1.0, np.amin(mean_r1), 2);
         self.assertAlmostEqual(1.0/2.0, np.amin(mean_r2), 2);
         self.assertAlmostEqual(1.0/3.0, np.amin(mean_r3), 2);
+
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

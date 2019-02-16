@@ -112,3 +112,7 @@ class SnapRoundingTest(TestCase):
         vertices, edges = snap_rounding(points, segments, 0.2);
         self.assertEqual(1, len(vertices));
         self.assertEqual(0, len(edges));
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

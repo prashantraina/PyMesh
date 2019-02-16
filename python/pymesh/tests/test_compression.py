@@ -94,3 +94,7 @@ class TestCompression(TestCase):
         #face_index_map = mesh2.get_attribute("face_index").ravel().astype(int);
         #self.assertEqual(mesh.num_faces, len(face_index_map));
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

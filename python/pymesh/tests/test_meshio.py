@@ -73,3 +73,7 @@ class MeshIOTest(TestCase):
                     anonymous=True);
             self.assert_mesh_equal(mesh, mesh2);
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

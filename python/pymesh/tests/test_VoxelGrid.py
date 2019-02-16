@@ -13,3 +13,7 @@ class VoxelGridTest(TestCase):
         self.assertLess(0, voxel_mesh.num_vertices);
         self.assertLess(0, voxel_mesh.num_faces);
         self.assertLess(0, voxel_mesh.num_voxels);
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

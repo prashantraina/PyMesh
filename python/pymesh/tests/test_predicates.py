@@ -85,3 +85,7 @@ class PredicatesTest(TestCase):
         self.assertLess(0.0, in_sphere(p1, p2, p3, p4, p_in));
         self.assertGreater(0.0, in_sphere(p1, p2, p3, p4, p_out));
         self.assertEqual(0.0, in_sphere(p1, p2, p3, p4, p_on));
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

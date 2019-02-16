@@ -11,3 +11,7 @@ class CSGTreeTest(TestCase):
         tree = CSGTree({"mesh": mesh});
         self.assert_array_equal(mesh.vertices, tree.vertices);
         self.assert_array_equal(mesh.faces, tree.faces);
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

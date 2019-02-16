@@ -11,8 +11,8 @@ import unittest
 
 class OuterHullTest(TestCase):
     def assert_valid_attributes(self, mesh, outer_hull):
-        self.assertTrue(outer_hull.has_attribute("flipped"));
-        self.assertTrue(outer_hull.has_attribute("face_sources"));
+        self.assertTrue(outer_hull.has_int_attribute("flipped"));
+        self.assertTrue(outer_hull.has_int_attribute("face_sources"));
 
         flipped = outer_hull.get_attribute("flipped");
         face_sources = outer_hull.get_attribute("face_sources");
@@ -101,3 +101,7 @@ class OuterHullTest(TestCase):
         self.assert_array_equal(([0, 0, 1], [1, 1, 1]), interior_mesh.bbox);
 
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

@@ -41,3 +41,7 @@ class WindingNumberTest(TestCase):
         self.assertEqual(len(queries), len(winding_numbers));
         self.assert_array_almost_equal(
             [0, 0.125, 0.25, 0.5, 1], winding_numbers, decimal=4);
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()
