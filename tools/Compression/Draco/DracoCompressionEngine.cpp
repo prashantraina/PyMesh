@@ -61,9 +61,10 @@ template <typename DracoMesh>
 void copy_vertex_attributes(Mesh::Ptr mesh,
         std::unique_ptr<DracoMesh>& draco_mesh) {
     const auto num_vertices = mesh->get_num_vertices();
-    const auto& attribute_names = mesh->get_attribute_names();
-    for (const auto& name : attribute_names) {
-        const auto& values = mesh->get_attribute(name);
+
+    const auto& float_attribute_names = mesh->get_float_attribute_names();
+    for (const auto& name : float_attribute_names) {
+        const auto& values = mesh->get_float_attribute(name);
         if (values.size() % num_vertices != 0) continue;
         const auto num_rows = num_vertices;
         const auto num_cols = values.size() / num_vertices;
@@ -93,6 +94,35 @@ void copy_vertex_attributes(Mesh::Ptr mesh,
         std::unique_ptr<draco::AttributeMetadata> metadata =
             std::make_unique<draco::AttributeMetadata>();
         metadata->AddEntryString("name", name);
+        metadata->AddEntryString("type", "float");
+        draco_mesh->AddAttributeMetadata(id, std::move(metadata));
+    }
+
+    const auto& int_attribute_names = mesh->get_int_attribute_names();
+    for (const auto& name : int_attribute_names) {
+        const auto& values = mesh->get_int_attribute(name);
+        if (values.size() % num_vertices != 0) continue;
+        const auto num_rows = num_vertices;
+        const auto num_cols = values.size() / num_vertices;
+        draco::GeometryAttribute attr;
+        if (name.substr(0, 6) == "vertex"){
+            attr.Init(draco::GeometryAttribute::GENERIC, nullptr,
+                    num_cols, draco::DT_INT32, false,
+                    sizeof(int) * num_cols, 0);
+        } else {
+            // Not a vertex attribute.
+            continue;
+        }
+        const auto id = draco_mesh->AddAttribute(attr, true, num_rows);
+        for (size_t i=0; i<num_rows; i++) {
+            draco_mesh->attribute(id)->SetAttributeValue(
+                    draco::AttributeValueIndex(i), values.data() +i*num_cols);
+        }
+
+        std::unique_ptr<draco::AttributeMetadata> metadata =
+            std::make_unique<draco::AttributeMetadata>();
+        metadata->AddEntryString("name", name);
+        metadata->AddEntryString("type", "int");
         draco_mesh->AddAttributeMetadata(id, std::move(metadata));
     }
 }
@@ -100,9 +130,10 @@ void copy_vertex_attributes(Mesh::Ptr mesh,
 void copy_face_attributes(Mesh::Ptr mesh,
         std::unique_ptr<draco::Mesh>& draco_mesh) {
     const auto num_faces = mesh->get_num_faces();
-    const auto& attribute_names = mesh->get_attribute_names();
-    for (const auto& name : attribute_names) {
-        const auto& values = mesh->get_attribute(name);
+
+    const auto& float_attribute_names = mesh->get_float_attribute_names();
+    for (const auto& name : float_attribute_names) {
+        const auto& values = mesh->get_float_attribute(name);
         if (values.size() % num_faces != 0) continue;
         const auto num_rows = num_faces;
         const auto num_cols = values.size() / num_faces;
@@ -129,6 +160,36 @@ void copy_face_attributes(Mesh::Ptr mesh,
         std::unique_ptr<draco::AttributeMetadata> metadata =
             std::make_unique<draco::AttributeMetadata>();
         metadata->AddEntryString("name", name);
+        metadata->AddEntryString("type", "float");
+        draco_mesh->AddAttributeMetadata(id, std::move(metadata));
+    }
+
+    const auto& int_attribute_names = mesh->get_int_attribute_names();
+    for (const auto& name : int_attribute_names) {
+        const auto& values = mesh->get_int_attribute(name);
+        if (values.size() % num_faces != 0) continue;
+        const auto num_rows = num_faces;
+        const auto num_cols = values.size() / num_faces;
+        draco::GeometryAttribute attr;
+        if (name.substr(0, 4) == "face"){
+            attr.Init(draco::GeometryAttribute::GENERIC, nullptr,
+                    num_cols, draco::DT_INT32, false,
+                    sizeof(int) * num_cols, 0);
+        } else {
+            // Not a face attribute.
+            continue;
+        }
+        const auto id = draco_mesh->AddAttribute(attr, true, num_rows);
+        draco_mesh->SetAttributeElementType(id, draco::MESH_FACE_ATTRIBUTE);
+        for (size_t i=0; i<num_rows; i++) {
+            draco_mesh->attribute(id)->SetAttributeValue(
+                    draco::AttributeValueIndex(i), values.data() + i*num_cols);
+        }
+
+        std::unique_ptr<draco::AttributeMetadata> metadata =
+            std::make_unique<draco::AttributeMetadata>();
+        metadata->AddEntryString("name", name);
+        metadata->AddEntryString("type", "int");
         draco_mesh->AddAttributeMetadata(id, std::move(metadata));
     }
 }
@@ -215,7 +276,9 @@ void copy_metadata(std::unique_ptr<DracoMesh>& draco_mesh, Mesh::Ptr mesh) {
     const auto& attr_metadatas = metadata->attribute_metadatas();
     for (const auto& attr_metadata : attr_metadatas) {
         std::string name="";
+        std::string type="";
         attr_metadata->GetEntryString("name", &name);
+        attr_metadata->GetEntryString("type", &type);
         if (name == "") continue;
         auto uid = attr_metadata->att_unique_id();
 
@@ -223,13 +286,27 @@ void copy_metadata(std::unique_ptr<DracoMesh>& draco_mesh, Mesh::Ptr mesh) {
         const auto num_rows = attr->size();
         const auto num_cols = attr->num_components();
 
-        VectorF data(num_rows * num_cols);
-        for (size_t i=0; i<num_rows; i++) {
-            attr->ConvertValue(draco::AttributeValueIndex(i),
-                    data.data() + i*num_cols);
+        if(type == "int")
+        {
+            VectorI data(num_rows * num_cols);
+            for (size_t i=0; i<num_rows; i++) {
+                attr->ConvertValue(draco::AttributeValueIndex(i),
+                        data.data() + i*num_cols);
+            }
+            mesh->add_empty_int_attribute(name);
+            mesh->set_int_attribute(name, data);
         }
-        mesh->add_empty_attribute(name);
-        mesh->set_attribute(name, data);
+        else //assume float
+        { 
+            VectorF data(num_rows * num_cols);
+            for (size_t i=0; i<num_rows; i++) {
+                attr->ConvertValue(draco::AttributeValueIndex(i),
+                        data.data() + i*num_cols);
+            }
+            mesh->add_empty_float_attribute(name);
+            mesh->set_float_attribute(name, data);
+        }
+       
     }
 }
 

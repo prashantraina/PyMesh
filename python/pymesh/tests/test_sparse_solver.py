@@ -18,3 +18,7 @@ class SparseSolverTest(TestCase):
             x = solver.solve(rhs);
             self.assert_array_almost_equal(rhs.ravel(), x.ravel());
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

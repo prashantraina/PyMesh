@@ -18,9 +18,9 @@ void FaceCircumCenterAttribute::compute_from_mesh(Mesh& mesh) {
     }
 
     if (!mesh.has_attribute("edge_squared_length")) {
-        mesh.add_attribute("edge_squared_length");
+        mesh.add_float_attribute("edge_squared_length");
     }
-    VectorF edge_sq_length = mesh.get_attribute("edge_squared_length");
+    VectorF edge_sq_length = mesh.get_float_attribute("edge_squared_length");
 
     VectorF& circum_centers = m_values;
     circum_centers.resize(num_faces * dim);

@@ -7,7 +7,7 @@
 
 namespace PyMesh {
 
-class VertexNormalAttribute : public MeshAttribute {
+class VertexNormalAttribute : public MeshAttributeF {
     public:
         virtual ~VertexNormalAttribute() = default;
 

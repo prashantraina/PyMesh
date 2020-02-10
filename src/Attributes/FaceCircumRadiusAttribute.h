@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class FaceCircumRadiusAttribute : public MeshAttribute {
+class FaceCircumRadiusAttribute : public MeshAttributeF {
     public:
         virtual ~FaceCircumRadiusAttribute() = default;
 

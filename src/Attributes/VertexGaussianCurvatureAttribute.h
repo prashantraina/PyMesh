@@ -7,7 +7,7 @@
 
 namespace PyMesh {
 
-class VertexGaussianCurvatureAttribute : public MeshAttribute {
+class VertexGaussianCurvatureAttribute : public MeshAttributeF {
     public:
         virtual ~VertexGaussianCurvatureAttribute() = default;
 

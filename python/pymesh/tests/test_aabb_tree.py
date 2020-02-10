@@ -25,3 +25,7 @@ class DistanceToMeshTest(TestCase):
         if "geogram" in BVH.available_engines:
             sq_dist, face_idx, closest_pts = distance_to_mesh(mesh, pts, "geogram");
             self.assert_array_equal(sq_dist, np.zeros(2));
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

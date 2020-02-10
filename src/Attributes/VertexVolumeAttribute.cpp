@@ -33,7 +33,7 @@ void VertexVolumeAttribute::compute_from_mesh(Mesh& mesh) {
 VectorF& VertexVolumeAttribute::get_voxel_volumes(Mesh& mesh) {
     std::string voxel_volume_attribute("voxel_volume");
     if (!mesh.has_attribute(voxel_volume_attribute)) {
-        mesh.add_attribute(voxel_volume_attribute);
+        mesh.add_float_attribute(voxel_volume_attribute);
     }
-    return mesh.get_attribute(voxel_volume_attribute);
+    return mesh.get_float_attribute(voxel_volume_attribute);
 }

@@ -27,7 +27,7 @@ void VertexAreaAttribute::compute_from_mesh(Mesh& mesh) {
 VectorF& VertexAreaAttribute::get_face_areas(Mesh& mesh) {
     const std::string face_area_attribute = "face_area";
     if (!mesh.has_attribute(face_area_attribute)) {
-        mesh.add_attribute(face_area_attribute);
+        mesh.add_float_attribute(face_area_attribute);
     }
-    return mesh.get_attribute(face_area_attribute);
+    return mesh.get_float_attribute(face_area_attribute);
 }

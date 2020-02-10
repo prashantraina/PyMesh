@@ -30,7 +30,7 @@ class ParameterDerivativeTest : public WireTest {
 
             Mesh::Ptr mesh = form_mesh(vertices, faces);
             mesh->add_attribute("face_source");
-            mesh->set_attribute("face_source", face_sources);
+            mesh->set_float_attribute("face_source", face_sources);
 
             size_t count = 0;
             for (const auto& velocity : shape_velocities) {
@@ -38,7 +38,7 @@ class ParameterDerivativeTest : public WireTest {
                 VectorF value = MatrixUtils::flatten<VectorF>(velocity);
                 attr_name << "shape_velocity_" << count;
                 mesh->add_attribute(attr_name.str());
-                mesh->set_attribute(attr_name.str(), value);
+                mesh->set_float_attribute(attr_name.str(), value);
             }
             return mesh;
         }

@@ -81,7 +81,7 @@ VectorI TetrahedronMesh::getElementAdjacentElements(size_t ei) const {
 
 Float TetrahedronMesh::getElementVolume(size_t ei) const {
     assert(ei < getNbrElements());
-    return m_mesh->get_attribute("voxel_volume")[ei];
+    return m_mesh->get_float_attribute("voxel_volume")[ei];
 }
 
 bool TetrahedronMesh::isBoundaryElement(size_t ei) const {
@@ -110,12 +110,12 @@ VectorI TetrahedronMesh::getBoundaryFace(size_t bfi) const {
 
 Float TetrahedronMesh::getBoundaryFaceArea(size_t bfi) const {
     assert(bfi < getNbrBoundaryFaces());
-    return m_mesh->get_attribute("face_area")[bfi];
+    return m_mesh->get_float_attribute("face_area")[bfi];
 }
 
 VectorF TetrahedronMesh::getBoundaryFaceNormal(size_t bfi) const {
     assert(bfi < getNbrBoundaryFaces());
-    return m_mesh->get_attribute("face_normal").segment(3*bfi, 3);
+    return m_mesh->get_float_attribute("face_normal").segment(3*bfi, 3);
 }
 
 size_t TetrahedronMesh::getNbrBoundaryNodes() const {
@@ -143,7 +143,7 @@ size_t TetrahedronMesh::getBoundaryIndex(size_t vi) const {
 VectorF TetrahedronMesh::getBoundaryNodeNormal(size_t bvi) const {
     assert(bvi < getNbrBoundaryNodes());
     size_t vi = getBoundaryNode(bvi);
-    return m_mesh->get_attribute("vertex_normal").segment(vi*3, 3);
+    return m_mesh->get_float_attribute("vertex_normal").segment(vi*3, 3);
 }
 
 VectorI TetrahedronMesh::getBoundaryNodeAdjacentBoundaryFaces(size_t bvi) const {

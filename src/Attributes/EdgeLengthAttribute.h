@@ -10,7 +10,7 @@ namespace PyMesh {
  * where x is the number vertices per face.
  * Yes, it is wasteful on memory.
  */
-class EdgeLengthAttribute : public MeshAttribute {
+class EdgeLengthAttribute : public MeshAttributeF {
     public:
         virtual ~EdgeLengthAttribute() = default;
 

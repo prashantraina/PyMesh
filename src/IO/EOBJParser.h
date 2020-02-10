@@ -6,17 +6,18 @@
 #include <list>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include <Core/EigenTypedef.h>
 
 namespace PyMesh {
 
-class OBJParser : public MeshParser {
+class EOBJParser : public MeshParser {
     // TODO: only triangular mesh is supported
     public:
         typedef MeshParser::AttrNames AttrNames;
-        OBJParser();
-        virtual ~OBJParser() {}
+        EOBJParser();
+        virtual ~EOBJParser() {}
 
         virtual bool parse(const std::string& filename);
 
@@ -39,6 +40,11 @@ class OBJParser : public MeshParser {
         virtual void export_float_attribute(const std::string& name, Float* buffer);
         virtual void export_int_attribute(const std::string& name, int* buffer);
 
+        void add_float_attribute(const std::string& elem_name,
+                                const std::string& prop_name, size_t size);
+        void add_int_attribute(const std::string& elem_name,
+                              const std::string& prop_name, size_t size);
+
     protected:
         void export_normals(Float* buffer) const;
         void export_textures(Float* buffer) const;
@@ -49,6 +55,9 @@ class OBJParser : public MeshParser {
         bool parse_vertex_texture(char* line);
         bool parse_vertex_parameter(char* line);
         bool parse_face_line(char* line);
+        bool parse_comment_line(char* line);
+        bool parse_attribute_declaration_line(std::string attr_name, std::string localization, std::string attr_type);
+        bool parse_attribute_values_line(char* line);
         void unify_faces();
         void finalize_textures();
         void finalize_normals();
@@ -60,6 +69,10 @@ class OBJParser : public MeshParser {
         typedef std::vector<VectorF> NormalVector;
         typedef std::vector<VectorF> TextureVector;
         typedef std::list<VectorF> ParameterList;
+        typedef std::unordered_map<std::string, std::vector<Float> > AttributeMapF;
+        typedef std::unordered_map<std::string, std::vector<int> > AttributeMapI;
+        typedef std::vector<std::string> AttributeNameList;
+        typedef std::vector<size_t> AttributeSizeList;
 
         FaceList earclip(const std::vector<size_t>& idx);
 
@@ -81,6 +94,12 @@ class OBJParser : public MeshParser {
         size_t     m_vertex_per_face;
         size_t     m_texture_dim;
         size_t     m_parameter_dim;
+        AttributeMapF m_attributesF;
+        AttributeMapI m_attributesI;
+        AttributeNameList m_vertexAttributeNames;
+        AttributeNameList m_facetAttributeNames;
+        AttributeSizeList m_vertexAttributeSizes;
+        AttributeSizeList m_facetAttributeSizes;
 };
 
 }

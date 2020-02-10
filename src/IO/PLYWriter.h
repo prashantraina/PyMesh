@@ -42,9 +42,12 @@ class PLYWriter : public MeshWriter {
         typedef std::vector<std::string> NameArray;
 
         NameArray m_attr_names;
-        NameArray m_vertex_attr_names;
-        NameArray m_face_attr_names;
-        NameArray m_voxel_attr_names;
+        NameArray m_vertex_attr_namesF;
+        NameArray m_vertex_attr_namesI;
+        NameArray m_face_attr_namesF;
+        NameArray m_face_attr_namesI;
+        NameArray m_voxel_attr_namesF;
+        NameArray m_voxel_attr_namesI;
 
         bool m_in_ascii;
         e_ply_type m_scalar;

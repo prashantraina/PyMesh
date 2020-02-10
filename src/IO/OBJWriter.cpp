@@ -85,7 +85,7 @@ void OBJWriter::write_mesh(Mesh& mesh) {
     VectorF texture;
     VectorI texture_indices;
     if (mesh.has_attribute("corner_texture")) {
-        texture = mesh.get_attribute("corner_texture");
+        texture = mesh.get_float_attribute("corner_texture");
         const size_t num_faces = mesh.get_num_faces();
         const size_t vertex_per_face = mesh.get_vertex_per_face();
         if (texture.size() != num_faces * vertex_per_face * 2) {

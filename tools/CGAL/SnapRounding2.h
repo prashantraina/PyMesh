@@ -1,6 +1,6 @@
 /* This file is part of PyMesh. Copyright (c) 2018 by Qingnan Zhou */
 #pragma once
-#ifdef WITH_CGAL
+//#ifdef WITH_CGAL
 
 #include <Core/EigenTypedef.h>
 
@@ -38,4 +38,4 @@ class SnapRounding2 {
 }
 
 
-#endif
+//#endif

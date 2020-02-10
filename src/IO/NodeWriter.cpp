@@ -54,13 +54,13 @@ void NodeWriter::write_node_file(const std::string& filename, Mesh& mesh) {
     if (!is_anonymous()) {
         fout << "# Generated with PyMesh" << std::endl;
     }
-    VectorF bd_marker;
+    const VectorI *bd_marker = nullptr;
     if (m_with_node_bd_marker) {
         if (!mesh.has_attribute("node_boundary_marker")) {
             throw IOError("Attribute \"node_boundary_marker\" does not exist.");
         } else {
-            bd_marker = mesh.get_attribute("node_boundary_marker");
-            assert(num_vertices == bd_marker.size());
+            bd_marker = &mesh.get_int_attribute("node_boundary_marker");
+            assert(num_vertices == bd_marker->size());
         }
     }
     const VectorF& vertices = mesh.get_vertices();
@@ -72,7 +72,7 @@ void NodeWriter::write_node_file(const std::string& filename, Mesh& mesh) {
             fout << " " << vertices[i*dim + j];
         }
         if (m_with_node_bd_marker) {
-            fout << " " << bd_marker[i];
+            fout << " " << (*bd_marker)[i];
         }
         fout << std::endl;
     }
@@ -91,13 +91,13 @@ void NodeWriter::write_face_file(const std::string& filename, Mesh& mesh) {
     if (!is_anonymous()) {
         fout << "# Generated with PyMesh" << std::endl;
     }
-    VectorF bd_marker;
+    const VectorI *bd_marker = nullptr;
     if (m_with_face_bd_marker) {
         if (!mesh.has_attribute("face_boundary_marker")) {
             throw IOError("Attribute \"face_boundary_marker\" does not exist.");
         } else {
-            bd_marker = mesh.get_attribute("face_boundary_marker");
-            assert(num_faces == bd_marker.size());
+            bd_marker = &mesh.get_int_attribute("face_boundary_marker");
+            assert(num_faces == bd_marker->size());
         }
     }
 
@@ -109,7 +109,7 @@ void NodeWriter::write_face_file(const std::string& filename, Mesh& mesh) {
             fout << " " << faces[i*vertex_per_face+ j];
         }
         if (m_with_face_bd_marker) {
-            fout << " " << bd_marker[i];
+            fout << " " << (*bd_marker)[i];
         }
         fout << std::endl;
     }
@@ -128,13 +128,13 @@ void NodeWriter::write_elem_file(const std::string& filename, Mesh& mesh) {
     if (!is_anonymous()) {
         fout << "# Generated with PyMesh" << std::endl;
     }
-    VectorF region;
+    const VectorI *region = nullptr;
     if (m_with_region_attribute) {
         if (!mesh.has_attribute("region")) {
             throw IOError("Attribute \"region\" does not exist.");
         } else {
-            region = mesh.get_attribute("region");
-            assert(num_voxels == region.size());
+            region = &mesh.get_int_attribute("region");
+            assert(num_voxels == region->size());
         }
     }
 
@@ -146,7 +146,7 @@ void NodeWriter::write_elem_file(const std::string& filename, Mesh& mesh) {
             fout << " " << voxels[i*4+ j];
         }
         if (m_with_region_attribute) {
-            fout << " " << region[i];
+            fout << " " << (*region)[i];
         }
         fout << std::endl;
     }

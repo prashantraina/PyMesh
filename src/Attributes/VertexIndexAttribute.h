@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class VertexIndexAttribute : public MeshAttribute {
+class VertexIndexAttribute : public MeshAttributeI {
     public:
         virtual ~VertexIndexAttribute() = default;
 

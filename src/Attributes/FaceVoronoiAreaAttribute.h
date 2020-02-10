@@ -8,7 +8,7 @@ namespace PyMesh {
 /**
  * Compute the Voronoi area of each corner of the face.
  */
-class FaceVoronoiAreaAttribute : public MeshAttribute {
+class FaceVoronoiAreaAttribute : public MeshAttributeF {
     public:
         virtual ~FaceVoronoiAreaAttribute() = default;
 

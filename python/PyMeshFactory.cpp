@@ -21,7 +21,9 @@ void init_MeshFactory(py::module &m) {
                 py::return_value_policy::reference_internal)
         .def("with_connectivity", &MeshFactory::with_connectivity,
                 py::return_value_policy::reference_internal)
-        .def("with_attribute", &MeshFactory::with_attribute,
+        .def("with_float_attribute", &MeshFactory::with_float_attribute,
+                py::return_value_policy::reference_internal)
+        .def("with_int_attribute", &MeshFactory::with_int_attribute,
                 py::return_value_policy::reference_internal)
         .def("drop_zero_dim", &MeshFactory::drop_zero_dim,
                 py::return_value_policy::reference_internal)

@@ -236,3 +236,7 @@ class SelfIntersectionTest(TestCase):
         #self.assert_no_self_intersect(output_mesh);
         self.assert_even_adj_faces(output_mesh);
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

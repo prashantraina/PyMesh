@@ -7,7 +7,7 @@ namespace PyMesh {
 
 class Mesh;
 
-class VoxelDihedralAngleAttribute : public MeshAttribute {
+class VoxelDihedralAngleAttribute : public MeshAttributeF {
     public:
         virtual ~VoxelDihedralAngleAttribute()=default;
 

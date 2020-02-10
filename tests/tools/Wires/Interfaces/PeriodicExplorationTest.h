@@ -472,7 +472,7 @@ TEST_F(PeriodicExplorationTest, hex_profile) {
         VectorF flattened_attr = flatten(velocities[j]);
 
         mesh->add_attribute(attr_name);
-        mesh->set_attribute(attr_name, flattened_attr);
+        mesh->set_float_attribute(attr_name, flattened_attr);
         attr_names.push_back(attr_name);
     }
     save_mesh("hex_1065.msh", mesh, attr_names);
@@ -565,24 +565,24 @@ TEST_F(PeriodicExplorationTest, shape_velocity) {
                 MatrixUtils::flatten<VectorF>(
                     reflected_shape_velocities[i]);
         reflected_mesh->add_attribute(attr_name.str());
-        reflected_mesh->set_attribute(attr_name.str(), reflected_velocity);
+        reflected_mesh->set_float_attribute(attr_name.str(), reflected_velocity);
 
         VectorF interpolated_velocity =
                 MatrixUtils::flatten<VectorF>(
                     interpolated_velocities[i]);
         reflected_mesh->add_attribute(attr_name.str()+"_interpolated");
-        reflected_mesh->set_attribute(attr_name.str()+"_interpolated",
-                interpolated_velocity);
+        reflected_mesh->set_float_attribute(attr_name.str() + "_interpolated",
+                                            interpolated_velocity);
 
         std::stringstream diff_name;
         diff_name << "velocity_diff_" << i;
         reflected_mesh->add_attribute(diff_name.str());
-        reflected_mesh->set_attribute(diff_name.str(), velocity_diff[i]);
+        reflected_mesh->set_float_attribute(diff_name.str(), velocity_diff[i]);
 
         VectorF normal_velocity = MatrixUtils::flatten<VectorF>(
                 normal_shape_velocities[i]);
         normal_mesh->add_attribute(attr_name.str());
-        normal_mesh->set_attribute(attr_name.str(), normal_velocity);
+        normal_mesh->set_float_attribute(attr_name.str(), normal_velocity);
     }
     save_mesh("shape_velocity_compare_reflected.msh", reflected_mesh,
             reflected_mesh->get_attribute_names());

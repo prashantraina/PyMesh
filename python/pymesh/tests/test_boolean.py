@@ -555,3 +555,8 @@ class BooleanTest(TestCase):
         self.assertTrue(mesh.is_manifold());
         self.assertEqual(1, mesh.num_components);
 
+
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

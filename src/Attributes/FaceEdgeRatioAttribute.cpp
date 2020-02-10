@@ -12,9 +12,9 @@ using namespace PyMesh;
 
 void FaceEdgeRatioAttribute::compute_from_mesh(Mesh& mesh) {
     if (!mesh.has_attribute("edge_length")) {
-        mesh.add_attribute("edge_length");
+        mesh.add_float_attribute("edge_length");
     }
-    const VectorF& edge_length = mesh.get_attribute("edge_length");
+    const VectorF& edge_length = mesh.get_float_attribute("edge_length");
 
     const size_t num_faces = mesh.get_num_faces();
     const size_t num_vertex_per_face = mesh.get_vertex_per_face();

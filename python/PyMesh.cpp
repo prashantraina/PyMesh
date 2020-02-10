@@ -40,10 +40,16 @@ void init_Mesh(py::module &m) {
         .def("get_voxel_adjacent_voxels", &Mesh::get_voxel_adjacent_voxels,
                 py::return_value_policy::move)
         .def("has_attribute", &Mesh::has_attribute)
-        .def("add_attribute", &Mesh::add_attribute)
+        .def("has_float_attribute", &Mesh::has_float_attribute)
+        .def("has_int_attribute", &Mesh::has_int_attribute)
+        .def("add_float_attribute", &Mesh::add_float_attribute)
+        .def("add_int_attribute", &Mesh::add_int_attribute)
         .def("remove_attribute", &Mesh::remove_attribute)
-        .def("get_attribute", py::overload_cast<const std::string&>(&Mesh::get_attribute, py::const_),
+        .def("get_float_attribute", py::overload_cast<const std::string&>(&Mesh::get_float_attribute, py::const_),
                 py::return_value_policy::reference_internal)
-        .def("set_attribute", &Mesh::set_attribute)
+        .def("get_int_attribute", py::overload_cast<const std::string&>(&Mesh::get_int_attribute, py::const_),
+             py::return_value_policy::reference_internal)
+        .def("set_float_attribute", &Mesh::set_float_attribute)
+        .def("set_int_attribute", &Mesh::set_int_attribute)
         .def("get_attribute_names", &Mesh::get_attribute_names);
 }

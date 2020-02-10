@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class VoxelCircumCenterAttribute : public MeshAttribute {
+class VoxelCircumCenterAttribute : public MeshAttributeF {
     public:
         virtual ~VoxelCircumCenterAttribute() = default;
 

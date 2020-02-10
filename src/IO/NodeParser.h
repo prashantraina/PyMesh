@@ -25,19 +25,21 @@ class NodeParser : public MeshParser {
         virtual size_t num_voxels() const {return m_num_voxels;}
         virtual size_t num_attributes() const;
 
-        virtual AttrNames get_attribute_names() const;
+        virtual AttrNames get_float_attribute_names() const;
+        virtual AttrNames get_int_attribute_names() const;
         virtual size_t get_attribute_size(const std::string& name) const;
 
         virtual void export_vertices(Float* buffer);
         virtual void export_faces(int* buffer);
         virtual void export_voxels(int* buffer);
-        virtual void export_attribute(const std::string& name, Float* buffer);
+        virtual void export_float_attribute(const std::string& name, Float* buffer);
+        virtual void export_int_attribute(const std::string& name, int* buffer);
 
     protected:
         typedef std::list<VectorF> VertexList;
         typedef std::list<VectorI> FaceList;
         typedef std::list<VectorI> VoxelList;
-        typedef std::list<VectorF> AttributeList;
+        typedef std::list<VectorF> AttributeListF;
         typedef std::list<int>     BoundaryNodeMarkers;
         typedef std::list<int>     BoundaryFaceMarkers;
         typedef std::list<int>     RegionAttributes;
@@ -51,14 +53,14 @@ class NodeParser : public MeshParser {
         VertexList    m_vertices;
         FaceList      m_faces;
         VoxelList     m_voxels;
-        AttributeList m_node_attributes;
+        AttributeListF m_node_attributesF;
         size_t        m_num_vertices;
         size_t        m_num_faces;
         size_t        m_num_voxels;
         size_t        m_dim;
         size_t        m_vertex_per_face;
         size_t        m_vertex_per_voxel;
-        size_t        m_num_node_attributes;
+        size_t        m_num_node_attributesF;
 
         BoundaryNodeMarkers m_boundary_node_markers;
         BoundaryFaceMarkers m_boundary_face_markers;

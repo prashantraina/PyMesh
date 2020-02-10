@@ -35,10 +35,15 @@ size_t STLParser::num_attributes() const {
         return 0;
 }
 
-STLParser::AttrNames STLParser::get_attribute_names() const {
+STLParser::AttrNames STLParser::get_float_attribute_names() const {
     AttrNames names;
     if (has_normal())
         names.push_back("face_normal");
+    return names;
+}
+
+STLParser::AttrNames STLParser::get_int_attribute_names() const {
+    AttrNames names;
     return names;
 }
 
@@ -84,7 +89,7 @@ void STLParser::export_voxels(int* buffer) {
     }
 }
 
-void STLParser::export_attribute(const std::string& name, Float* buffer) {
+void STLParser::export_float_attribute(const std::string& name, Float* buffer) {
     if (!attribute_exists(name)) {
         std::cerr << "Warning: mesh does not have attribute with name "
             << name << std::endl;
@@ -100,6 +105,12 @@ void STLParser::export_attribute(const std::string& name, Float* buffer) {
         buffer[count*3+2] = normal[2];
         count++;
     }
+}
+
+void STLParser::export_int_attribute(const std::string& name, int* buffer) {
+    std::ostringstream strOut;
+    strOut << "Unknown attribute: " << name << std::endl;
+    throw IOError(strOut.str());
 }
 
 bool STLParser::attribute_exists(const std::string& name) const {

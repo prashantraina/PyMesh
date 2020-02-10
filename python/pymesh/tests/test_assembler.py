@@ -70,3 +70,8 @@ class AssemblerTest(TestCase):
         self.assertAlmostEqual(0.0, scipy.sparse.linalg.norm(E-I));
 
 
+
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

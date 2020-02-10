@@ -31,9 +31,9 @@ TEST_F(ElementWiseIsotropicMaterialTest, 2D) {
     }
     mesh->add_attribute("face_centroid");
     mesh->add_attribute("young");
-    mesh->set_attribute("young", young);
+    mesh->set_float_attribute("young", young);
     mesh->add_attribute("poisson");
-    mesh->set_attribute("poisson", poisson);
+    mesh->set_float_attribute("poisson", poisson);
 
     MaterialPtr mat = MaterialPtr(new ElementWiseIsotropicMaterial(
                 m_density, mesh, "young", "poisson"));
@@ -61,9 +61,9 @@ TEST_F(ElementWiseIsotropicMaterialTest, 3D) {
     }
     mesh->add_attribute("voxel_centroid");
     mesh->add_attribute("young");
-    mesh->set_attribute("young", young);
+    mesh->set_float_attribute("young", young);
     mesh->add_attribute("poisson");
-    mesh->set_attribute("poisson", poisson);
+    mesh->set_float_attribute("poisson", poisson);
 
     MaterialPtr mat = MaterialPtr(new ElementWiseIsotropicMaterial(
                 m_density, mesh, "young", "poisson"));

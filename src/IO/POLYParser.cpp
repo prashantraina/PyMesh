@@ -25,7 +25,10 @@ bool POLYParser::parse(const std::string& filename) {
     return true;
 }
 
-POLYParser::AttrNames POLYParser::get_attribute_names() const {
+POLYParser::AttrNames POLYParser::get_float_attribute_names() const {
+    return AttrNames();
+}
+POLYParser::AttrNames POLYParser::get_int_attribute_names() const {
     return AttrNames();
 }
 
@@ -41,9 +44,13 @@ void POLYParser::export_voxels(int* buffer) {
     std::copy(m_voxels.begin(), m_voxels.end(), buffer);
 }
 
-void POLYParser::export_attribute(const std::string& name, Float* buffer) {
+void POLYParser::export_float_attribute(const std::string& name, Float* buffer) {
     std::cerr << "Warning: attribute "  << name << " does not exist." <<
         std::endl;
+}
+void POLYParser::export_int_attribute(const std::string& name, int* buffer) {
+    std::cerr << "Warning: attribute "  << name << " does not exist." <<
+              std::endl;
 }
 
 void POLYParser::parse_vertices(std::ifstream& fin) {

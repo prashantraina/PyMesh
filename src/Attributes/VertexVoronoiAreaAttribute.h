@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class VertexVoronoiAreaAttribute : public MeshAttribute {
+class VertexVoronoiAreaAttribute : public MeshAttributeF {
     public:
         virtual ~VertexVoronoiAreaAttribute() = default;
 

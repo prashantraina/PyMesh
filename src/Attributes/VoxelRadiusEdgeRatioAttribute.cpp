@@ -21,9 +21,9 @@ void VoxelRadiusEdgeRatioAttribute::compute_from_mesh(Mesh& mesh) {
     }
 
     if (!mesh.has_attribute("voxel_circumradius")) {
-        mesh.add_attribute("voxel_circumradius");
+        mesh.add_float_attribute("voxel_circumradius");
     }
-    const auto& circum_radii = mesh.get_attribute("voxel_circumradius");
+    const auto& circum_radii = mesh.get_float_attribute("voxel_circumradius");
     assert(circum_radii.size() == num_voxels);
     const auto& vertices = mesh.get_vertices();
     const auto& voxels = mesh.get_voxels();

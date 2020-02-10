@@ -202,7 +202,10 @@ void VEGAParser::export_voxels(int* buffer) {
     }
 }
 
-VEGAParser::AttrNames VEGAParser::get_attribute_names() const {
+VEGAParser::AttrNames VEGAParser::get_float_attribute_names() const {
+    return AttrNames();
+}
+VEGAParser::AttrNames VEGAParser::get_int_attribute_names() const {
     return AttrNames();
 }
 
@@ -212,7 +215,12 @@ size_t VEGAParser::get_attribute_size(const std::string& name) const {
     throw IOError(err_msg.str());
 }
 
-void VEGAParser::export_attribute(const std::string& name, Float* buffer) {
+void VEGAParser::export_float_attribute(const std::string& name, Float* buffer) {
+    std::stringstream err_msg;
+    err_msg << "Unknown attribute name: " << name << std::endl;
+    throw IOError(err_msg.str());
+}
+void VEGAParser::export_int_attribute(const std::string& name, int* buffer) {
     std::stringstream err_msg;
     err_msg << "Unknown attribute name: " << name << std::endl;
     throw IOError(err_msg.str());

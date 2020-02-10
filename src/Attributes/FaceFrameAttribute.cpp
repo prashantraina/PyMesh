@@ -36,15 +36,15 @@ void FaceFrameAttribute::compute_3D_frame_field(Mesh& mesh) {
     const size_t num_faces = mesh.get_num_faces();
     const size_t num_vertex_per_face = mesh.get_vertex_per_face();
     if (!mesh.has_attribute("edge_length")) {
-        mesh.add_attribute("edge_length");
+        mesh.add_float_attribute("edge_length");
     }
     if (!mesh.has_attribute("face_normal")) {
-        mesh.add_attribute("face_normal");
+        mesh.add_float_attribute("face_normal");
     }
 
     const auto& faces = mesh.get_faces();
-    const auto& edge_lengths = mesh.get_attribute("edge_length");
-    const auto& normals = mesh.get_attribute("face_normal");
+    const auto& edge_lengths = mesh.get_float_attribute("edge_length");
+    const auto& normals = mesh.get_float_attribute("face_normal");
     assert(normals.size() == num_faces * 3);
 
     VectorF& frame_field = m_values;

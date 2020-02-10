@@ -94,8 +94,8 @@ void VertexNormalAttribute::compute_vertex_normals_from_edge(Mesh& mesh) {
 
 const VectorF& VertexNormalAttribute::get_attribute(Mesh& mesh, const std::string& attr_name) {
     if (!mesh.has_attribute(attr_name)) {
-        mesh.add_attribute(attr_name);
+        mesh.add_float_attribute(attr_name);
     }
     assert(mesh.has_attribute(attr_name));
-    return mesh.get_attribute(attr_name);
+    return mesh.get_float_attribute(attr_name);
 }

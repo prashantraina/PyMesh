@@ -60,9 +60,9 @@ def compute_outer_hull(mesh, engine="auto", all_layers=False):
         o_flipped = o_flipped[info["ori_face_indices"]];
         o_ori_faces = o_ori_faces[info["ori_face_indices"]];
         outer_hull = form_mesh(o_vertices, o_faces);
-        outer_hull.add_attribute("flipped");
+        outer_hull.add_attribute("flipped", dtype=np.int32);
         outer_hull.set_attribute("flipped", o_flipped);
-        outer_hull.add_attribute("face_sources");
+        outer_hull.add_attribute("face_sources", dtype=np.int32);
         outer_hull.set_attribute("face_sources", o_ori_faces);
         return outer_hull;
 

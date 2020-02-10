@@ -1,5 +1,5 @@
 /* This file is part of PyMesh. Copyright (c) 2015 by Qingnan Zhou */
-#include "OBJParser.h"
+#include "EOBJParser.h"
 #include <cstdio>
 #include <cassert>
 #include <fstream>
@@ -13,13 +13,13 @@
 
 using namespace PyMesh;
 
-OBJParser::OBJParser() :
+EOBJParser::EOBJParser() :
     m_dim(0),
     m_vertex_per_face(0),
     m_texture_dim(0),
     m_parameter_dim(0){ }
 
-bool OBJParser::parse(const std::string& filename) {
+bool EOBJParser::parse(const std::string& filename) {
     const size_t LINE_SIZE = 4096;
     char line[LINE_SIZE];
 
@@ -47,6 +47,9 @@ bool OBJParser::parse(const std::string& filename) {
             case 'f':
                 success = parse_face_line(line);
                 break;
+            case '#':
+                success = parse_comment_line(line);
+                success = true; //it might be just a regular comment
             default:
                 // Ignore other lines by default.
                 success = true;
@@ -70,7 +73,7 @@ bool OBJParser::parse(const std::string& filename) {
     return true;
 }
 
-size_t OBJParser::num_attributes() const {
+size_t EOBJParser::num_attributes() const {
     size_t r = 0;
     if (m_corner_normals.size() > 0) r++;
     if (m_corner_textures.size() > 0) r++;
@@ -78,36 +81,55 @@ size_t OBJParser::num_attributes() const {
     return r;
 }
 
-OBJParser::AttrNames OBJParser::get_float_attribute_names() const {
-    OBJParser::AttrNames attr_names;
+EOBJParser::AttrNames EOBJParser::get_float_attribute_names() const {
+    EOBJParser::AttrNames attr_names;
     if (m_corner_normals.size() > 0)
         attr_names.push_back("corner_normal");
     if (m_corner_textures.size() > 0)
         attr_names.push_back("corner_texture");
     if (m_parameters.size() > 0)
         attr_names.push_back("vertex_parameter");
+    for (AttributeMapF::const_iterator itr = m_attributesF.begin();
+         itr != m_attributesF.end(); itr++) {
+        attr_names.push_back(itr->first);
+    }
     return attr_names;
 }
 
-OBJParser::AttrNames OBJParser::get_int_attribute_names() const {
-    OBJParser::AttrNames attr_names;
+EOBJParser::AttrNames EOBJParser::get_int_attribute_names() const {
+    EOBJParser::AttrNames attr_names;
+    for (AttributeMapI::const_iterator itr = m_attributesI.begin();
+         itr != m_attributesI.end(); itr++) {
+        attr_names.push_back(itr->first);
+    }
     return attr_names;
 }
 
-size_t OBJParser::get_attribute_size(const std::string& name) const {
+size_t EOBJParser::get_attribute_size(const std::string& name) const {
     if (name == "corner_normal")
         return m_corner_normals.size() * m_dim;
     else if (name == "corner_texture")
         return m_corner_textures.size() * m_texture_dim;
     else if (name == "vertex_parameter")
         return m_parameters.size() * m_parameter_dim;
-    else {
-        std::cerr << "Attribute " << name << " does not exist." << std::endl;
-        return 0;
+    else
+    {
+        const auto pairF = m_attributesF.find(name);
+        const auto pairI = m_attributesI.find(name);
+        if(pairF != m_attributesF.end()) {
+            std::cout << "Float attribute '" << name << "' has size " << pairF->second.size() << std::endl;
+            return pairF->second.size();
+        }
+        else if(pairI != m_attributesI.end())
+            return pairI->second.size();
+        else {
+            std::cerr << "Attribute " << name << " does not exist." << std::endl;
+            return 0;
+        }
     }
 }
 
-void OBJParser::export_vertices(Float* buffer) {
+void EOBJParser::export_vertices(Float* buffer) {
     const size_t dim = m_dim;
     size_t count=0;
     for (VertexList::const_iterator vi=m_vertices.begin();
@@ -120,7 +142,7 @@ void OBJParser::export_vertices(Float* buffer) {
     }
 }
 
-void OBJParser::export_faces(int* buffer) {
+void EOBJParser::export_faces(int* buffer) {
     size_t count=0;
     for (FaceList::const_iterator fi=m_faces.begin();
             fi != m_faces.end(); fi++) {
@@ -132,7 +154,7 @@ void OBJParser::export_faces(int* buffer) {
     }
 }
 
-void OBJParser::export_voxels(int* buffer) {
+void EOBJParser::export_voxels(int* buffer) {
     size_t num_vertex_per_voxel = vertex_per_voxel();
     size_t count=0;
     for (VoxelList::const_iterator vi=m_voxels.begin();
@@ -145,7 +167,7 @@ void OBJParser::export_voxels(int* buffer) {
     }
 }
 
-void OBJParser::export_float_attribute(const std::string& name, Float* buffer) {
+void EOBJParser::export_float_attribute(const std::string& name, Float* buffer) {
     if (name == "corner_normal")
         export_normals(buffer);
     else if (name == "corner_texture")
@@ -153,16 +175,29 @@ void OBJParser::export_float_attribute(const std::string& name, Float* buffer) {
     else if (name == "vertex_parameter")
         export_parameters(buffer);
     else {
-        std::cerr << "Warning: mesh does not have float attribute with name "
-            << name << std::endl;
+        AttributeMapF::const_iterator itr = m_attributesF.find(name);
+        if (itr == m_attributesF.end()) {
+            std::cerr << "Warning: mesh does not have attribute with name "
+                      << name << std::endl;
+        } else {
+            const std::vector<Float> &attr = itr->second;
+            std::copy(attr.begin(), attr.end(), buffer);
+        }
     }
 }
 
-void OBJParser::export_int_attribute(const std::string& name, int* buffer) {
-    std::cerr << "Warning: mesh does not have int attributes!" << std::endl;
+void EOBJParser::export_int_attribute(const std::string& name, int* buffer) {
+   AttributeMapI::const_iterator itr = m_attributesI.find(name);
+    if (itr == m_attributesI.end()) {
+        std::cerr << "Warning: mesh does not have attribute with name "
+                  << name << std::endl;
+    } else {
+        const std::vector<int> &attr = itr->second;
+        std::copy(attr.begin(), attr.end(), buffer);
+    }
 }
 
-void OBJParser::export_normals(Float* buffer) const {
+void EOBJParser::export_normals(Float* buffer) const {
     const size_t dim = m_dim;
     size_t count=0;
     for (const auto& n : m_corner_normals) {
@@ -171,7 +206,7 @@ void OBJParser::export_normals(Float* buffer) const {
     }
 }
 
-void OBJParser::export_textures(Float* buffer) const {
+void EOBJParser::export_textures(Float* buffer) const {
     const size_t dim = m_texture_dim;
     size_t count=0;
     for (const auto& t : m_corner_textures) {
@@ -180,7 +215,7 @@ void OBJParser::export_textures(Float* buffer) const {
     }
 }
 
-void OBJParser::export_parameters(Float* buffer) const {
+void EOBJParser::export_parameters(Float* buffer) const {
     const size_t dim = m_parameter_dim;
     size_t count=0;
     for (const auto& p : m_parameters) {
@@ -189,7 +224,60 @@ void OBJParser::export_parameters(Float* buffer) const {
     }
 }
 
-bool OBJParser::parse_vertex_line(char* line) {
+void EOBJParser::add_float_attribute(const std::string& elem_name,
+                                   const std::string& prop_name, size_t size) {
+
+
+    std::string attr_name = elem_name + "_" + prop_name;
+    AttributeMapF::const_iterator itr = m_attributesF.find(attr_name);
+    if (itr == m_attributesF.end()) {
+        m_attributesF[attr_name] = std::vector<Float>();
+        if(elem_name == "vertex") {
+            m_attributesF[attr_name].reserve(m_vertices.size() * size);
+            m_vertexAttributeNames.push_back(attr_name);
+            m_vertexAttributeSizes.push_back(size);
+        }
+        else if(elem_name == "face") {
+            m_attributesF[attr_name].reserve(m_faces.size() * size);
+            m_facetAttributeNames.push_back(attr_name);
+            m_facetAttributeSizes.push_back(size);
+        }
+    } else {
+        std::stringstream err_msg;
+        err_msg << "Duplicated property name: " << prop_name << std::endl;
+        err_msg << "PyMesh requires unique custom property names";
+        throw IOError(err_msg.str());
+    }
+}
+
+void EOBJParser::add_int_attribute(const std::string& elem_name,
+                                     const std::string& prop_name, size_t size) {
+
+
+    std::string attr_name = elem_name + "_" + prop_name;
+    AttributeMapI::const_iterator itr = m_attributesI.find(attr_name);
+    if (itr == m_attributesI.end()) {
+        m_attributesI[attr_name] = std::vector<int>();
+        if(elem_name == "vertex") {
+            m_attributesI[attr_name].reserve(m_vertices.size() * size);
+            m_vertexAttributeNames.push_back(attr_name);
+            m_vertexAttributeSizes.push_back(size);
+        }
+        else if(elem_name == "face") {
+            m_attributesI[attr_name].reserve(m_faces.size() * size);
+            m_facetAttributeNames.push_back(attr_name);
+            m_facetAttributeSizes.push_back(size);
+        }
+    } else {
+        std::stringstream err_msg;
+        err_msg << "Duplicated property name: " << prop_name << std::endl;
+        err_msg << "PyMesh requires unique custom property names";
+        throw IOError(err_msg.str());
+    }
+}
+
+
+bool EOBJParser::parse_vertex_line(char* line) {
     assert(line[0] == 'v');
     switch (line[1]) {
         case ' ':
@@ -204,15 +292,12 @@ bool OBJParser::parse_vertex_line(char* line) {
         case 'c':
             // Unofficial custom line.  Ignore.
             return true;
-        case 'l':
-            // Unofficial 'vl' line.  Ignore.
-            return true;
         default:
             throw IOError("Invalid vertex line: " + std::string(line));
     }
 }
 
-bool OBJParser::parse_vertex_coordinate(char* line) {
+bool EOBJParser::parse_vertex_coordinate(char* line) {
     char header[8];
     Float data[4];
     size_t n = sscanf(line, "%s %lf %lf %lf %lf", header,
@@ -235,7 +320,7 @@ bool OBJParser::parse_vertex_coordinate(char* line) {
     return true;
 }
 
-bool OBJParser::parse_vertex_normal(char* line) {
+bool EOBJParser::parse_vertex_normal(char* line) {
     char header[8];
     Float data[3];
     size_t n = sscanf(line, "%s %lf %lf %lf", header,
@@ -246,7 +331,7 @@ bool OBJParser::parse_vertex_normal(char* line) {
     return true;
 }
 
-bool OBJParser::parse_vertex_texture(char* line) {
+bool EOBJParser::parse_vertex_texture(char* line) {
     char header[8];
     Float data[3];
     size_t n = sscanf(line, "%s %lf %lf %lf", header,
@@ -257,7 +342,7 @@ bool OBJParser::parse_vertex_texture(char* line) {
     return true;
 }
 
-bool OBJParser::parse_vertex_parameter(char* line) {
+bool EOBJParser::parse_vertex_parameter(char* line) {
     char header[8];
     Float data[3];
     size_t n = sscanf(line, "%s %lf %lf %lf", header,
@@ -268,7 +353,7 @@ bool OBJParser::parse_vertex_parameter(char* line) {
     return true;
 }
 
-bool OBJParser::parse_face_line(char* line) {
+bool EOBJParser::parse_face_line(char* line) {
     const char WHITE_SPACE[] = " \t\n\r";
     constexpr int INVALID = std::numeric_limits<int>::max();
     char* field = strtok(line, WHITE_SPACE);
@@ -365,7 +450,136 @@ bool OBJParser::parse_face_line(char* line) {
     return true;
 }
 
-OBJParser::FaceList OBJParser::earclip(const std::vector<size_t>& idx) {
+bool EOBJParser::parse_comment_line(char* line) {
+    char attr_name[256];
+    char localization[8];
+    char attr_type[32];
+    size_t n = sscanf(line, "# attribute %s %s %s", attr_name, localization, attr_type);
+    if (n >= 3)
+        return parse_attribute_declaration_line(attr_name, localization, attr_type);
+
+    char localization_short[1];
+    unsigned int index;
+
+    n = sscanf(line, "# attrs %s %u", localization_short, &index);
+
+    if (n >= 2)
+        return parse_attribute_values_line(line);
+
+    return false;
+}
+
+bool EOBJParser::parse_attribute_declaration_line(std::string attr_name, std::string localization, std::string attr_type)
+{
+    if(localization != "vertex" && localization != "facet")
+    {
+        std::cerr << "Unsupported localization: " << localization << std::endl;
+        return true;
+    }
+
+    bool isInt = false;
+    size_t attr_size = 1;
+
+    if(attr_type == "real" || attr_type == "float" || attr_type == "double"){}
+    else if(attr_type == "integer" || attr_type == "boolean" || attr_type == "int" || attr_type == "bool")
+        isInt = true;
+    else if(attr_type == "vec2")
+        attr_size = 2;
+    else if(attr_type == "vec3")
+        attr_size = 3;
+    else if(attr_type == "vec4" || attr_type == "Color")
+        attr_size = 4;
+    //TODO: support vecd, mat2, mat3, mat4
+    else
+    {
+        std::cerr << "Unsupported attribute type: " << attr_type << std::endl;
+        return false;
+    }
+
+    if(localization == "vertex")
+    {
+        if(isInt)
+            add_int_attribute("vertex", attr_name, attr_size);
+        else
+            add_float_attribute("vertex", attr_name, attr_size);
+    }
+    else if(localization == "facet")
+    {
+        if(isInt)
+            add_int_attribute("face", attr_name, attr_size);
+        else
+            add_float_attribute("face", attr_name, attr_size);
+    }
+
+    std::cout << "Found attribute '" << attr_name << "' on element '" << localization
+     << "' of type '" << attr_type << "' with length " << attr_size << std::endl;
+
+    return true;
+}
+
+bool EOBJParser::parse_attribute_values_line(char* line)
+{
+    std::istringstream strin(line);
+
+    std::string hashChar, attrs, localization_short;
+    size_t elem_index;
+
+    strin >> hashChar >> attrs >> localization_short >> elem_index;
+
+    if(strin.fail() || hashChar != "#" || attrs != "attrs" ||
+            (localization_short != "v" && localization_short != "f" && localization_short != "h")) {
+        std::cerr << "Invalid attribute values line in EOBJ file!" << std::endl;
+        std::cerr << "hashChar = '" << hashChar <<  "'\nattrs = '" << attrs
+        << "'\nlocalization_short = '" << localization_short << "'\nelem_index = " << elem_index << std::endl;
+        return false;
+    }
+    if(localization_short == "h") //halfedge attribute is not supported
+        return true;
+
+    auto& m_attributeNames = localization_short == "v" ? m_vertexAttributeNames : m_facetAttributeNames;
+    auto& m_attributeSizes = localization_short == "v" ? m_vertexAttributeSizes : m_facetAttributeSizes;
+
+    for(size_t i = 0; i < m_attributeNames.size(); i++)
+    {
+        const std::string& attr_name = m_attributeNames[i];
+        const size_t& attr_size = m_attributeSizes[i];
+        bool isInt = m_attributesF.find(attr_name) == m_attributesF.end();
+
+        for(size_t elem_i = 0; elem_i < attr_size; elem_i++)
+        {
+            if(!isInt)
+            {
+                Float value;
+                strin >> value;
+                if(strin.fail()) {
+                    std::cerr << "Invalid attribute values line in EOBJ file!" << std::endl;
+                    std::cerr << "Expected " << attr_size << " floats for attribute '" << attr_name
+                    << "' but got " << elem_i << " instead" << std::endl;
+                    return false;
+                }
+                m_attributesF[attr_name].push_back(value);
+                //std::cout << "Scanned " << (elem_i+1) << " of " << attr_size << " floats for attribute '"
+                // << attr_name << "'" << std::endl;
+            }
+            else
+            {
+                int value;
+                strin >> value;
+                if(strin.fail()) {
+                    std::cerr << "Invalid attribute values line in EOBJ file!" << std::endl;
+                    std::cerr << "Expected " << attr_size << " ints for attribute '" << attr_name
+                              << "' but got " << elem_i << " instead" << std::endl;
+                    return false;
+                }
+                m_attributesI[attr_name].push_back(value);
+            }
+        }
+    }
+
+    return true;
+}
+
+EOBJParser::FaceList EOBJParser::earclip(const std::vector<size_t>& idx) {
     // This method implements the naive ear clipping algorithm with complexity
     // O(n^2).  It may be slow for large n.
     assert(idx.size() > 3);
@@ -483,7 +697,7 @@ OBJParser::FaceList OBJParser::earclip(const std::vector<size_t>& idx) {
     return tris;
 }
 
-void OBJParser::unify_faces() {
+void EOBJParser::unify_faces() {
     if (m_tris.size() > 0 && m_quads.size() == 0) {
         m_faces = std::move(m_tris);
         m_textures = std::move(m_tri_textures);
@@ -517,7 +731,7 @@ void OBJParser::unify_faces() {
     }
 }
 
-void OBJParser::finalize_textures() {
+void EOBJParser::finalize_textures() {
     const size_t num_faces = m_faces.size();
     if (m_textures.size() != num_faces || m_corner_textures.size() == 0)
         return;
@@ -555,7 +769,7 @@ void OBJParser::finalize_textures() {
     assert(m_corner_textures.size() == num_faces * m_vertex_per_face);
 }
 
-void OBJParser::finalize_normals() {
+void EOBJParser::finalize_normals() {
     if (m_normals.size() != m_faces.size() || m_corner_normals.size() == 0)
         return;
 
@@ -590,7 +804,7 @@ void OBJParser::finalize_normals() {
     std::swap(normals, m_corner_normals);
 }
 
-void OBJParser::finalize_parameters() {
+void EOBJParser::finalize_parameters() {
     if (m_parameters.empty()) return;
     if (m_parameters.size() != m_vertices.size()) {
         std::cerr << "Mismatch between vertex and vertex parameters."

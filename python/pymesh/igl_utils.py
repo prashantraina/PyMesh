@@ -3,7 +3,6 @@ from PyMesh import face_normals
 from PyMesh import vertex_normals
 from PyMesh import edge_normals
 from PyMesh import orient_outward
-from PyMesh import reorient_facets_raycast as 
 from PyMesh import igl_embree_reorient_facets_raycast
 
 def orient_faces(vertices, faces, outward=True):

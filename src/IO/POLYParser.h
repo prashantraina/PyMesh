@@ -33,7 +33,8 @@ class POLYParser : public MeshParser {
         }
         virtual size_t num_attributes() const { return 0; }
 
-        virtual AttrNames get_attribute_names() const;
+        virtual AttrNames get_float_attribute_names() const;
+        virtual AttrNames get_int_attribute_names() const;
         virtual size_t get_attribute_size(const std::string& name) const {
             return 0;
         }
@@ -41,7 +42,8 @@ class POLYParser : public MeshParser {
         virtual void export_vertices(Float* buffer);
         virtual void export_faces(int* buffer);
         virtual void export_voxels(int* buffer);
-        virtual void export_attribute(const std::string& name, Float* buffer);
+        virtual void export_float_attribute(const std::string& name, Float* buffer);
+        virtual void export_int_attribute(const std::string& name, int* buffer);
 
     protected:
         void parse_vertices(std::ifstream& fin);

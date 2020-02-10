@@ -18,14 +18,14 @@ void FaceRadiusEdgeRatioAttribute::compute_from_mesh(Mesh& mesh) {
     }
 
     if (!mesh.has_attribute("face_circumradius")) {
-        mesh.add_attribute("face_circumradius");
+        mesh.add_float_attribute("face_circumradius");
     }
-    const auto& circum_radii = mesh.get_attribute("face_circumradius");
+    const auto& circum_radii = mesh.get_float_attribute("face_circumradius");
 
     if (!mesh.has_attribute("edge_length")) {
-        mesh.add_attribute("edge_length");
+        mesh.add_float_attribute("edge_length");
     }
-    const auto& lengths = mesh.get_attribute("edge_length");
+    const auto& lengths = mesh.get_float_attribute("edge_length");
 
     VectorF& re_ratio = m_values;
     re_ratio.resize(num_faces);

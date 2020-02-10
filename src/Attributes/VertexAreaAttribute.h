@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class VertexAreaAttribute : public MeshAttribute {
+class VertexAreaAttribute : public MeshAttributeF {
     public:
         virtual ~VertexAreaAttribute() = default;
 

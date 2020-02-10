@@ -46,7 +46,7 @@ class MixedMeshTilerTest : public WireTest {
                 std::stringstream dof_name;
                 dof_name << "dof_" << i;
                 mesh->add_attribute(dof_name.str());
-                mesh->set_attribute(dof_name.str(), dof);
+                mesh->set_float_attribute(dof_name.str(), dof);
             }
         }
 
@@ -74,7 +74,7 @@ TEST_F(MixedMeshTilerTest, 2D) {
     const size_t num_cells = mesh->get_num_faces();
     VectorF pattern_id = generate_pattern_id(num_cells, 2);
     mesh->add_attribute("pattern_id");
-    mesh->set_attribute("pattern_id", pattern_id);
+    mesh->set_float_attribute("pattern_id", pattern_id);
 
     size_t max_num_dofs = 5;
     MatrixF dofs = MatrixFr::Ones(num_cells, max_num_dofs) * 0.1;
@@ -105,7 +105,7 @@ TEST_F(MixedMeshTilerTest, 3D) {
     const size_t num_cells = mesh->get_num_voxels();
     VectorF pattern_id = generate_pattern_id(num_cells, 2);
     mesh->add_attribute("pattern_id");
-    mesh->set_attribute("pattern_id", pattern_id);
+    mesh->set_float_attribute("pattern_id", pattern_id);
 
     size_t max_num_dofs = 5;
     MatrixF dofs = MatrixFr::Ones(num_cells, max_num_dofs) * 0.2;
@@ -135,7 +135,7 @@ TEST_F(MixedMeshTilerTest, 3D_single_pattern) {
     const size_t num_cells = mesh->get_num_voxels();
     VectorF pattern_id = generate_pattern_id(num_cells, 1);
     mesh->add_attribute("pattern_id");
-    mesh->set_attribute("pattern_id", pattern_id);
+    mesh->set_float_attribute("pattern_id", pattern_id);
 
     size_t max_num_dofs = 2;
     MatrixF dofs = MatrixFr::Ones(num_cells, max_num_dofs) * 0.2;

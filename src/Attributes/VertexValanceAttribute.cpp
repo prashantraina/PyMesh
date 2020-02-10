@@ -33,8 +33,8 @@ void VertexValanceAttribute::compute_from_surface_mesh(Mesh& mesh) {
     const size_t num_faces = mesh.get_num_faces();
     const size_t num_vertex_per_face = mesh.get_vertex_per_face();
 
-    VectorF& vertex_valance = m_values;
-    vertex_valance = VectorF::Zero(num_vertices);
+    VectorI& vertex_valance = m_values;
+    vertex_valance = VectorI::Zero(num_vertices);
 
     std::set<Duplet> edges;
     for (size_t i=0; i<num_faces; i++) {
@@ -58,8 +58,8 @@ void VertexValanceAttribute::compute_from_tet_mesh(Mesh& mesh) {
     const size_t num_vertex_per_voxel = mesh.get_vertex_per_voxel();
     assert(num_vertex_per_voxel == 4);
 
-    VectorF& vertex_valance = m_values;
-    vertex_valance = VectorF::Zero(num_vertices);
+    VectorI& vertex_valance = m_values;
+    vertex_valance = VectorI::Zero(num_vertices);
 
     std::set<Duplet> edges;
     for (size_t i=0; i<num_voxels; i++) {
@@ -102,8 +102,8 @@ void VertexValanceAttribute::compute_from_hex_mesh(Mesh& mesh) {
     // +--------+/
     // 4         5
 
-    VectorF& vertex_valance = m_values;
-    vertex_valance = VectorF::Zero(num_vertices);
+    VectorI& vertex_valance = m_values;
+    vertex_valance = VectorI::Zero(num_vertices);
 
     std::set<Duplet> edges;
     for (size_t i=0; i<num_voxels; i++) {

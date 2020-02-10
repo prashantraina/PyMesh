@@ -35,3 +35,7 @@ class SliceMeshTest(TestCase):
 
         slices = merge_meshes(slices);
         self.assert_bbox_is_embedded(slices.bbox, mesh.bbox);
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

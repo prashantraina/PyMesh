@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class EdgeDihedralAngleAttribute : public MeshAttribute {
+class EdgeDihedralAngleAttribute : public MeshAttributeF {
     public:
         virtual ~EdgeDihedralAngleAttribute() = default;
 

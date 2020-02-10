@@ -81,7 +81,7 @@ VectorI TriangleMesh::getElementAdjacentElements(size_t ei) const {
 
 Float TriangleMesh::getElementVolume(size_t ei) const {
     assert(ei < getNbrElements());
-    return m_mesh->get_attribute("face_area")[ei];
+    return m_mesh->get_float_attribute("face_area")[ei];
 }
 
 bool TriangleMesh::isBoundaryElement(size_t ei) const {
@@ -275,7 +275,7 @@ void TriangleMesh::init_boundary_normals(const BoundaryPtr& bd) {
         VectorF v1 = m_mesh->get_vertex(edge[1]);
 
         size_t face_idx = bd->get_boundary_element(i);
-        VectorF normal = m_mesh->get_attribute("face_normal").segment(
+        VectorF normal = m_mesh->get_float_attribute("face_normal").segment(
                 face_idx * 3, 3);
 
         Vector3F edge_v, normal_v;

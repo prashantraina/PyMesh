@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class VoxelVolumeAttribute : public MeshAttribute {
+class VoxelVolumeAttribute : public MeshAttributeF {
     public:
         virtual ~VoxelVolumeAttribute() = default;
 

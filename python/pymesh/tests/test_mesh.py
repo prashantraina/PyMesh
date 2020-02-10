@@ -85,3 +85,7 @@ class MeshTest(TestCase):
         self.assertAlmostEqual(0, areas[1]);
         self.assertAlmostEqual(0.5, areas[2]);
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

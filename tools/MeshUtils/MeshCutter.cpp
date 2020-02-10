@@ -94,10 +94,10 @@ Mesh::Ptr MeshCutter::cut_at_uv_discontinuity() const {
     const auto& vertices = m_mesh->get_vertices();
     const auto& faces = m_mesh->get_faces();
 
-    if (!m_mesh->has_attribute("corner_texture")) {
+    if (!m_mesh->has_float_attribute("corner_texture")) {
         throw RuntimeError("Mesh does not have texture");
     }
-    const auto& uv = m_mesh->get_attribute("corner_texture");
+    const auto& uv = m_mesh->get_float_attribute("corner_texture");
     if (uv.size() != num_faces * vertex_per_face * 2) {
         throw RuntimeError("Comp ids size does not match the number of faces in mesh");
     }

@@ -30,21 +30,25 @@ class VEGAParser : public MeshParser {
         virtual size_t num_voxels() const override {return m_num_voxels;}
         virtual size_t num_attributes() const override { return 0; }
 
-        virtual AttrNames get_attribute_names() const override;
+        virtual AttrNames get_float_attribute_names() const override;
+        virtual AttrNames get_int_attribute_names() const override;
         virtual size_t get_attribute_size(
                 const std::string& name) const override;
 
         virtual void export_vertices(Float* buffer) override;
         virtual void export_faces(int* buffer) override;
         virtual void export_voxels(int* buffer) override;
-        virtual void export_attribute(
+        virtual void export_float_attribute(
                 const std::string& name, Float* buffer) override;
+        virtual void export_int_attribute(
+                const std::string& name, int* buffer) override;
 
     protected:
         using VertexList          = std::list<VectorF>;
         using FaceList            = std::list<VectorI>;
         using VoxelList           = std::list<VectorI>;
-        using AttributeList       = std::list<VectorF>;
+        using AttributeListF       = std::list<VectorF>;
+        using AttributeListI       = std::list<VectorI>;
 
         void parse_vertices(std::ifstream& fin);
         void parse_elements(std::ifstream& fin);

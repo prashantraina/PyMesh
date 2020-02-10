@@ -7,7 +7,7 @@
 
 namespace PyMesh {
 
-class VertexLaplacianAttribute : public MeshAttribute {
+class VertexLaplacianAttribute : public MeshAttributeF {
     public:
         virtual ~VertexLaplacianAttribute() = default;
 

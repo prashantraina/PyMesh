@@ -105,3 +105,7 @@ class HarmonicSolverTest(TestCase):
 
         self.assertEqual(mesh.num_vertices, len(sol));
         self.assert_array_almost_equal(target_solution, sol, 3);
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

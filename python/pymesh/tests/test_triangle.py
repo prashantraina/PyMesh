@@ -110,3 +110,7 @@ else:
             tri.run();
             mesh = tri.mesh;
             self.assertEqual(2, mesh.num_boundary_loops);
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

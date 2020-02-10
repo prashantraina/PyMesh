@@ -25,9 +25,9 @@ void VoxelInradiusAttribute::compute_from_mesh(Mesh& mesh) {
     const auto& voxels = mesh.get_voxels();
     const auto& vertices = mesh.get_vertices();
     if (!mesh.has_attribute("voxel_volume")) {
-        mesh.add_attribute("voxel_volume");
+        mesh.add_float_attribute("voxel_volume");
     }
-    const auto& volumes = mesh.get_attribute("voxel_volume");
+    const auto& volumes = mesh.get_float_attribute("voxel_volume");
 
     for (size_t i=0; i<num_voxels; i++) {
         Vector4I voxel = voxels.segment<4>(i*4);

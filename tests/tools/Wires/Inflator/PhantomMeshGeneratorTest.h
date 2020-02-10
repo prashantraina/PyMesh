@@ -40,7 +40,7 @@ TEST_F(PhantomMeshGeneratorTest, creation) {
         std::stringstream attr_name;
         attr_name << "velocity_" << count;
         mesh->add_attribute(attr_name.str());
-        mesh->set_attribute(attr_name.str(), velocity);
+        mesh->set_float_attribute(attr_name.str(), velocity);
         attr_names.push_back(attr_name.str());
         count++;
     }

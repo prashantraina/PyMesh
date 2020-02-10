@@ -46,7 +46,7 @@ void init_Wires(py::module &m) {
                 py::return_value_policy::reference_internal)
         .def("add_attribute", &WireNetwork::add_attribute,
                 "name"_a, "vertex_wise"_a=true, "auto_compute"_a=true)
-        .def("set_attribute", &WireNetwork::set_attribute)
+        .def("set_float_attribute", &WireNetwork::set_attribute)
         .def("get_attribute_names", &WireNetwork::get_attribute_names)
         .def("clear_attributes", &WireNetwork::clear_attributes)
         .def("with_connectivity", &WireNetwork::with_connectivity)

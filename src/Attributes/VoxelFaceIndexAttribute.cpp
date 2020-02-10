@@ -17,7 +17,7 @@ void VoxelFaceIndexAttribute::compute_from_mesh(Mesh& mesh) {
 
     auto& indices = m_values;
     indices.resize(num_voxels * 4);
-    indices.setConstant(-1.0);
+    indices.setConstant(-1);
 
     const auto& faces = mesh.get_faces();
     const auto& voxels = mesh.get_voxels();

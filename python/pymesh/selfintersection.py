@@ -50,7 +50,7 @@ def resolve_self_intersection(mesh, engine="auto"):
 
     output_mesh = form_mesh(vertices, faces);
     face_sources = resolver.get_face_sources();
-    output_mesh.add_attribute("face_sources");
+    output_mesh.add_attribute("face_sources", dtype=np.int32);
     output_mesh.set_attribute("face_sources", face_sources);
 
     return output_mesh;

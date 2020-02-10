@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class FaceAspectRatioAttribute : public MeshAttribute {
+class FaceAspectRatioAttribute : public MeshAttributeF {
     public:
         virtual ~FaceAspectRatioAttribute() = default;
 

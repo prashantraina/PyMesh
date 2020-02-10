@@ -27,7 +27,8 @@ class MeshFactory {
         MeshFactory& load_matrices(
                 const MatrixFr& vertices, const MatrixIr& faces, const MatrixIr& voxels);
         MeshFactory& with_connectivity(const std::string& conn_type);
-        MeshFactory& with_attribute(const std::string& attr_name);
+        MeshFactory& with_float_attribute(const std::string& attr_name);
+        MeshFactory& with_int_attribute(const std::string& attr_name);
         MeshFactory& drop_zero_dim();
         Mesh::Ptr create() { return m_mesh; }
 

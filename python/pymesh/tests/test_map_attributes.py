@@ -54,7 +54,7 @@ class MapAttributesTest(TestCase):
         centroids2 = mesh2.get_face_attribute("face_centroid");
 
         value = np.argmax(np.absolute(centroids1), axis=1);
-        mesh1.add_attribute("value");
+        mesh1.add_attribute("value", dtype=np.int32);
         mesh1.set_attribute("value", value);
         pymesh.map_face_attribute(mesh1, mesh2, "value");
 
@@ -68,7 +68,7 @@ class MapAttributesTest(TestCase):
         mesh2 = pymesh.generate_icosphere(2.1, [0.0, 0.0, 0.0], 2);
 
         value = np.arange(mesh1.num_faces * mesh1.vertex_per_face);
-        mesh1.add_attribute("test");
+        mesh1.add_attribute("test", dtype=np.int32);
         mesh1.set_attribute("test", value);
 
         pymesh.map_corner_attribute(mesh1, mesh2, "test");
@@ -80,3 +80,8 @@ class MapAttributesTest(TestCase):
         largest_error = np.amax(np.absolute(diff));
         self.assertLess(largest_error, 1e-12);
 
+
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

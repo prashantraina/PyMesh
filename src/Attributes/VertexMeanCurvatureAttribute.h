@@ -7,7 +7,7 @@
 
 namespace PyMesh {
 
-class VertexMeanCurvatureAttribute : public MeshAttribute {
+class VertexMeanCurvatureAttribute : public MeshAttributeF {
     public:
         virtual ~VertexMeanCurvatureAttribute() = default;
 

@@ -73,3 +73,7 @@ class MinkowskiSumTest(TestCase):
 
         self_intersections = detect_self_intersection(output_mesh);
         self.assertEqual(0, len(self_intersections));
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

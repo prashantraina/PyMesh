@@ -63,3 +63,7 @@ else:
             out_areas = out_mesh.get_attribute("face_area");
             self.assertAlmostEqual(np.sum(in_areas), np.sum(out_areas));
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

@@ -53,6 +53,8 @@ class Mesh(object):
 
     """
 
+    predefined_int_attrs = ['vertex_index', 'vertex_valance', 'face_index', 'voxel_index']
+
     def __init__(self, raw_mesh):
         """ Private constructor
 
@@ -60,55 +62,91 @@ class Mesh(object):
         """
         self.__mesh = raw_mesh;
 
-    def add_attribute(self, name):
+    def add_attribute(self, name, dtype=np.float64):
         """ Add an attribute to mesh.
         """
-        self.__mesh.add_attribute(name);
+        if name in Mesh.predefined_int_attrs or dtype == np.int32:
+            self.__mesh.add_int_attribute(name)
+        elif dtype == np.float64:
+            self.__mesh.add_float_attribute(name)
+        else:
+            raise ValueError('Unsupported dtype: ' + str(dtype))
 
     def has_attribute(self, name):
         """ Check if an attribute exists.
         """
         return self.__mesh.has_attribute(name);
 
+    def has_float_attribute(self, name):
+        """ Check if a float-valued attribute exists.
+        """
+        return self.__mesh.has_float_attribute(name);
+
+    def has_int_attribute(self, name):
+        """ Check if an integer-valued attribute exists.
+        """
+        return self.__mesh.has_int_attribute(name);
+
     def get_attribute(self, name):
         """ Return attribute values in a flattened array.
         """
-        return self.__mesh.get_attribute(name).ravel();
+        if self.__mesh.has_float_attribute(name):
+            return self.__mesh.get_float_attribute(name).ravel()
+        elif self.__mesh.has_int_attribute(name):
+            return self.__mesh.get_int_attribute(name).ravel()
+        else:
+            raise ValueError('Attribute not found: ' + name)
 
     def get_vertex_attribute(self, name):
         """ Same as :py:meth:`.get_attribute` but reshaped to have
         :py:attr:`num_vertices` rows.
         """
+
+        attr = self.get_attribute(name)
+
         if self.num_vertices == 0:
-            return self.__mesh.get_attribute(name);
+            return attr
         else:
-            return self.__mesh.get_attribute(name).reshape(
-                    (self.num_vertices, -1), order="C");
+            return attr.reshape((self.num_vertices, -1), order="C")
 
     def get_face_attribute(self, name):
         """ Same as :py:meth:`.get_attribute` but reshaped to have
         :py:attr:`num_faces` rows.
         """
+
+        attr = self.get_attribute(name)
+
         if self.num_faces == 0:
-            return self.__mesh.get_attribute(name);
+            return attr
         else:
-            return self.__mesh.get_attribute(name).reshape(
-                    (self.num_faces, -1), order="C");
+            return attr.reshape((self.num_faces, -1), order="C")
 
     def get_voxel_attribute(self, name):
         """ Same as :py:meth:`.get_attribute` but reshaped to have
         :py:attr:`num_voxels` rows.
         """
+
+        attr = self.get_attribute(name)
+
         if self.num_voxels == 0:
-            return self.__mesh.get_attribute(name);
+            return attr
         else:
-            return self.__mesh.get_attribute(name).reshape(
-                    (self.num_voxels, -1), order="C");
+            return attr.reshape((self.num_voxels, -1), order="C")
 
     def set_attribute(self, name, val):
         """ Set attribute to the given value.
         """
-        self.__mesh.set_attribute(name, val.ravel(order="C"));
+
+        if val.dtype == np.float64:
+            self.__mesh.set_float_attribute(name, val.ravel(order="C"))
+        elif val.dtype == np.float32:
+            self.__mesh.set_float_attribute(name, val.astype(np.float64).ravel(order="C"))
+        elif val.dtype == np.int32:
+            self.__mesh.set_int_attribute(name, val.ravel(order="C"))
+        elif val.dtype in (np.int64, np.int16, np.uint16, np.uint32, np.int8, np.uint8, np.bool):
+            self.__mesh.set_int_attribute(name, val.astype(np.int32).ravel(order="C"))
+        else:
+            raise ValueError('Unsupported dtype: ' + str(val.dtype))
 
     def remove_attribute(self, name):
         """ Remove attribute from mesh.

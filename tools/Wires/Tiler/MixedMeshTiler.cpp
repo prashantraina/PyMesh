@@ -21,7 +21,7 @@ m_target_type(target_type), m_dof_type(dof_type) {
                 "Mesh attribute \"pattern_id\" is required by mixed mesh tiler");
     }
 
-    VectorI pattern_id = m_mesh->get_attribute("pattern_id").cast<int>();
+    VectorI pattern_id = m_mesh->get_int_attribute("pattern_id");
     if (pattern_id.maxCoeff() >= m_unit_wires.size()) {
         std::stringstream err_msg;
         err_msg << "Too few unit patterns supplied: expecting "
@@ -35,7 +35,7 @@ WireNetwork::Ptr MixedMeshTiler::tile() {
     const size_t num_cells = get_num_cells();
     auto transforms = get_tiling_operators();
     auto vars_array = extract_attributes(m_mesh);
-    VectorI pattern_id = m_mesh->get_attribute("pattern_id").cast<int>();
+    VectorI pattern_id = m_mesh->get_int_attribute("pattern_id");
     assert(pattern_id.size() == num_cells);
 
     m_tiled_vertices.clear();

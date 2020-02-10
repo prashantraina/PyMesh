@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class VoxelIndexAttribute : public MeshAttribute {
+class VoxelIndexAttribute : public MeshAttributeI {
     public:
         virtual ~VoxelIndexAttribute() {}
 

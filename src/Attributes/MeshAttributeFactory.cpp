@@ -42,7 +42,7 @@
 
 using namespace PyMesh;
 
-MeshAttribute::Ptr PyMesh::MeshAttributeFactory::create(
+MeshAttributeF::Ptr PyMesh::MeshAttributeFactory::create_float(
         const std::string& name) {
     if (name == "vertex_normal") {
         return std::make_shared<VertexNormalAttribute>();
@@ -56,10 +56,6 @@ MeshAttribute::Ptr PyMesh::MeshAttributeFactory::create(
         return std::make_shared<VertexMeanCurvatureAttribute>();
     } else if (name == "vertex_gaussian_curvature") {
         return std::make_shared<VertexGaussianCurvatureAttribute>();
-    } else if (name == "vertex_index") {
-        return std::make_shared<VertexIndexAttribute>();
-    } else if (name == "vertex_valance") {
-        return std::make_shared<VertexValanceAttribute>();
     } else if (name == "vertex_dihedral_angle") {
         return std::make_shared<VertexDihedralAngleAttribute>();
     } else if (name == "vertex_voronoi_area") {
@@ -88,8 +84,6 @@ MeshAttribute::Ptr PyMesh::MeshAttributeFactory::create(
         return std::make_shared<FaceIncircleCenterAttribute>();
     } else if (name == "face_incircle_radius") {
         return std::make_shared<FaceIncircleRadiusAttribute>();
-    } else if (name == "face_index") {
-        return std::make_shared<FaceIndexAttribute>();
     } else if (name == "face_normal") {
         return std::make_shared<FaceNormalAttribute>();
     } else if (name == "face_radius_edge_ratio") {
@@ -100,8 +94,6 @@ MeshAttribute::Ptr PyMesh::MeshAttributeFactory::create(
         return std::make_shared<VoxelDihedralAngleAttribute>();
     } else if (name == "voxel_edge_ratio") {
         return std::make_shared<VoxelEdgeRatioAttribute>();
-    } else if (name == "voxel_face_index") {
-        return std::make_shared<VoxelFaceIndexAttribute>();
     } else if (name == "voxel_centroid") {
         return std::make_shared<VoxelCentroidAttribute>();
     } else if (name == "voxel_circumcenter") {
@@ -112,14 +104,31 @@ MeshAttribute::Ptr PyMesh::MeshAttributeFactory::create(
         return std::make_shared<VoxelIncenterAttribute>();
     } else if (name == "voxel_inradius") {
         return std::make_shared<VoxelInradiusAttribute>();
-    } else if (name == "voxel_index") {
-        return std::make_shared<VoxelIndexAttribute>();
     } else if (name == "voxel_radius_edge_ratio") {
         return std::make_shared<VoxelRadiusEdgeRatioAttribute>();
     } else if (name == "voxel_volume") {
         return std::make_shared<VoxelVolumeAttribute>();
     } else {
         // Generic attribute.
-        return std::make_shared<MeshAttribute>();
+        return std::make_shared<MeshAttributeF>();
+    }
+}
+
+
+MeshAttributeI::Ptr PyMesh::MeshAttributeFactory::create_int(
+        const std::string& name) {
+    if (name == "vertex_index") {
+        return std::make_shared<VertexIndexAttribute>();
+    } else if (name == "vertex_valance") {
+        return std::make_shared<VertexValanceAttribute>();
+    } else if (name == "face_index") {
+        return std::make_shared<FaceIndexAttribute>();
+    } else if (name == "voxel_face_index") {
+        return std::make_shared<VoxelFaceIndexAttribute>();
+    } else if (name == "voxel_index") {
+        return std::make_shared<VoxelIndexAttribute>();
+    } else {
+        // Generic attribute.
+        return std::make_shared<MeshAttributeI>();
     }
 }

@@ -90,7 +90,7 @@ size_t OFFParser::num_attributes() const {
     return result;
 }
 
-OFFParser::AttrNames OFFParser::get_attribute_names() const {
+OFFParser::AttrNames OFFParser::get_float_attribute_names() const {
     OFFParser::AttrNames names;
     if (!m_vertex_colors.empty()) {
         names.push_back("vertex_red");
@@ -104,6 +104,11 @@ OFFParser::AttrNames OFFParser::get_attribute_names() const {
         names.push_back("face_blue");
         names.push_back("face_alpha");
     }
+    return names;
+}
+
+OFFParser::AttrNames OFFParser::get_int_attribute_names() const {
+    OFFParser::AttrNames names;
     return names;
 }
 
@@ -142,7 +147,7 @@ void OFFParser::export_faces(int* buffer) {
     }
 }
 
-void OFFParser::export_attribute(const std::string& name, Float* buffer) {
+void OFFParser::export_float_attribute(const std::string& name, Float* buffer) {
     if (name.substr(0, 6) == "vertex") {
         export_color(m_vertex_colors, name.substr(7), buffer);
     } else if (name.substr(0, 4) == "face") {
@@ -152,6 +157,11 @@ void OFFParser::export_attribute(const std::string& name, Float* buffer) {
         err_msg << "Unknown attribute name: " << name << std::endl;
         throw IOError(err_msg.str());
     }
+}
+void OFFParser::export_int_attribute(const std::string& name, int* buffer) {
+    std::stringstream err_msg;
+    err_msg << "Unknown attribute name: " << name << std::endl;
+    throw IOError(err_msg.str());
 }
 
 void OFFParser::check_header(char* line) {

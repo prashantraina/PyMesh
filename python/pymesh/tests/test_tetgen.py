@@ -146,3 +146,7 @@ class TetgenTest(TestCase):
         self.assertEqual(5, len(tetgen.vertices));
         self.assertEqual(4, len(tetgen.voxels));
 
+
+if __name__ == '__main__':
+    import unittest
+    unittest.main()

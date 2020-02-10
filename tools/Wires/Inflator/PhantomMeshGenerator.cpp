@@ -301,9 +301,9 @@ void PhantomMeshGenerator::compute_phantom_shape_velocities() {
             dim, vertex_per_face, vertex_per_voxel);
     Mesh::Ptr mesh = factory.create();
 
-    VectorF face_sources = m_face_sources_from_phantom_wires.cast<Float>();
-    mesh->add_attribute("face_source");
-    mesh->set_attribute("face_source", face_sources);
+    VectorI& face_sources = m_face_sources_from_phantom_wires;
+    mesh->add_int_attribute("face_source");
+    mesh->set_int_attribute("face_source", face_sources);
 
     //VectorF debug_face_sources = m_face_sources_from_ori_wires.cast<Float>();
     //save_mesh("phantom_debug.msh", m_vertices, m_faces, debug_face_sources);
@@ -325,8 +325,8 @@ void PhantomMeshGenerator::save_mesh(const std::string& filename,
     Mesh::Ptr mesh = MeshFactory().load_data(
             flattened_vertices, flattened_faces, voxels,
             vertices.cols(), faces.cols(), 0).create();
-    mesh->add_attribute("debug");
-    mesh->set_attribute("debug", debug);
+    mesh->add_float_attribute("debug");
+    mesh->set_float_attribute("debug", debug);
 
     MeshWriter::Ptr writer = MeshWriter::create(filename);
     writer->with_attribute("debug");

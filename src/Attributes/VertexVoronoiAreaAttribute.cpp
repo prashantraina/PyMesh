@@ -8,7 +8,7 @@ using namespace PyMesh;
 
 void VertexVoronoiAreaAttribute::compute_from_mesh(Mesh& mesh) {
     if (!mesh.has_attribute("face_voronoi_area")) {
-        mesh.add_attribute("face_voronoi_area");
+        mesh.add_float_attribute("face_voronoi_area");
     }
 
     const size_t num_vertices = mesh.get_num_vertices();
@@ -19,7 +19,7 @@ void VertexVoronoiAreaAttribute::compute_from_mesh(Mesh& mesh) {
         throw NotImplementedError("Vertex Voronoi area computation only has triangle mesh support");
     }
 
-    const auto& face_voronoi_areas = mesh.get_attribute("face_voronoi_area");
+    const auto& face_voronoi_areas = mesh.get_float_attribute("face_voronoi_area");
     auto& vertex_voronoi_areas = m_values;
     vertex_voronoi_areas = VectorF::Zero(num_vertices);
     const auto& faces = mesh.get_faces();

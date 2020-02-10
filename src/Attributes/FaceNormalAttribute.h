@@ -5,7 +5,7 @@
 
 namespace PyMesh {
 
-class FaceNormalAttribute : public MeshAttribute {
+class FaceNormalAttribute : public MeshAttributeF {
     public:
         virtual ~FaceNormalAttribute() = default;
 
