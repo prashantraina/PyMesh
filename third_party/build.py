@@ -14,7 +14,7 @@ import sys
 def get_third_party_dependencies():
     return ["cgal", "cork", "eigen",
         "tetgen", "triangle", "qhull", "clipper", "draco",
-        "tbb", "mmg"]
+        "tbb", "embree", "mmg"]
 
 def parse_args():
     parser = argparse.ArgumentParser(__doc__);
@@ -54,12 +54,17 @@ def build_generic(libname, build_flags="", cleanup=True):
         shutil.rmtree(build_dir)
 
 def build(package, cleanup):
+    pymesh_dir = get_pymesh_dir();
     if package == "all":
         for libname in get_third_party_dependencies():
             build(libname, cleanup);
     elif package == "cgal":
         build_generic("cgal",
                 " -DWITH_CGAL_ImageIO=Off -DWITH_CGAL_Qt5=Off",
+                cleanup=cleanup);
+    elif package == "embree":
+        build_generic("embree",
+                " -DEMBREE_ISPC_SUPPORT=Off -DEMBREE_TUTORIALS=Off -DEMBREE_TBB_ROOT={}/python/pymesh/third_party/".format(pymesh_dir),
                 cleanup=cleanup);
     elif package == "clipper":
         build_generic("Clipper/cpp", cleanup=cleanup);

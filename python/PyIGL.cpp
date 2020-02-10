@@ -14,6 +14,7 @@
 #include <igl/per_edge_normals.h>
 #include <igl/orientable_patches.h>
 #include <igl/orient_outward.h>
+#include <igl/embree/reorient_facets_raycast.h>
 
 namespace py = pybind11;
 using namespace PyMesh;
@@ -91,7 +92,6 @@ void init_IGL(py::module &m) {
                 V, F, igl::PER_EDGE_NORMALS_WEIGHTING_TYPE_UNIFORM, FN, EN, E, EMAP);
             return std::make_tuple(EN, E, EMAP);
             });
-
     
     m.def("orient_outward",
             [](const MatrixFr& V, const MatrixIr& F) {
@@ -100,6 +100,14 @@ void init_IGL(py::module &m) {
             MatrixIr FF;
             VectorI I;
             igl::orient_outward(V, F, C, FF, I);
+            return FF;
+            });
+
+    m.def("igl_embree_reorient_facets_raycast",
+            [](const MatrixFr& V, const MatrixIr& F) {
+            MatrixIr FF;
+            VectorI I;
+            igl::embree::reorient_facets_raycast(V, F, FF, I);
             return FF;
             });
 }

@@ -28,6 +28,7 @@ PYBIND11_ADD_MODULE(PyMesh module.cpp
     PyWires.cpp)
 TARGET_LINK_LIBRARIES(PyMesh PRIVATE
     Mesh
+    PyMesh::Embree
     PyMesh::Tools::Assembler
     PyMesh::Tools::MeshUtils
     PyMesh::Tools::CGAL
